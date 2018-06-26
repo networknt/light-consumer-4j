@@ -7,6 +7,17 @@
   <version>1.5.15</version>
   <description>Light 4J Client Dependency Module</description>
   <url>https://github.com/networknt/light-client-all-4j</url>
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/networknt/light-client-all-4j/issues</url>
+  </issueManagement>
+  <developers>
+    <developer>
+      <id>NicholasAzar</id>
+      <name>Nicholas Azar</name>
+      <email>nicholas.azar2@gmail.com</email>
+    </developer>
+  </developers>
   <licenses>
     <license>
       <name>Apache License Version 2.0</name>
@@ -20,8 +31,6 @@
     <url>https://github.com:networknt/light-client-all-4j.git</url>
   </scm>
   <build>
-    <defaultGoal>install</defaultGoal>
-    <directory>target</directory>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <pluginManagement>
       <plugins>
