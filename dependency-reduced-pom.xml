@@ -4,7 +4,7 @@
   <groupId>com.networknt</groupId>
   <artifactId>light-client-all-4j</artifactId>
   <name>Parent POM</name>
-  <version>1.5.15</version>
+  <version>1.5.16</version>
   <description>Light 4J Client Dependency Module</description>
   <url>https://github.com/networknt/light-client-all-4j</url>
   <issueManagement>
