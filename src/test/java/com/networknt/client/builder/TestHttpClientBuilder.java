@@ -5,6 +5,7 @@ import com.networknt.exception.ClientException;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import io.undertow.util.Methods;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeoutException;
 
 public class TestHttpClientBuilder {
 
-    @Test
+    @Test @Ignore
     public void testHttpClientBuilder() throws ApiException, ClientException, InterruptedException, URISyntaxException, TimeoutException, ExecutionException {
         ClientResponse clientResponse = new HttpClientBuilder()
                 .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
