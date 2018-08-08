@@ -12,8 +12,9 @@ public class HttpClientRequest {
     private Boolean addCCToken = false;
     private Boolean propagateHeaders = false;
     private CountDownLatch latch;
-    private TimeoutDef connectionTimeout = new TimeoutDef(5, TimeUnit.SECONDS);
-    private TimeoutDef requestTimeout;
+    private TimeoutDef connectionRequestTimeout = new TimeoutDef(2, TimeUnit.SECONDS);
+    private TimeoutDef requestTimeout = new TimeoutDef(1, TimeUnit.SECONDS);
+    private long connectionCacheTTLms = 10000;
 
     public ServiceDef getServiceDef() {
         return serviceDef;
@@ -63,19 +64,27 @@ public class HttpClientRequest {
         this.latch = latch;
     }
 
-    public TimeoutDef getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    public void setConnectionTimeout(TimeoutDef connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
-
     public TimeoutDef getRequestTimeout() {
         return requestTimeout;
     }
 
     public void setRequestTimeout(TimeoutDef requestTimeout) {
         this.requestTimeout = requestTimeout;
+    }
+
+    public TimeoutDef getConnectionRequestTimeout() {
+        return connectionRequestTimeout;
+    }
+
+    public void setConnectionRequestTimeout(TimeoutDef connectionRequestTimeout) {
+        this.connectionRequestTimeout = connectionRequestTimeout;
+    }
+
+    public long getConnectionCacheTTLms() {
+        return connectionCacheTTLms;
+    }
+
+    public void setConnectionCacheTTLms(long connectionCacheTTLms) {
+        this.connectionCacheTTLms = connectionCacheTTLms;
     }
 }

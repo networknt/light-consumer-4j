@@ -5,7 +5,6 @@ import com.networknt.cluster.Cluster;
 import com.networknt.exception.ApiException;
 import com.networknt.exception.ClientException;
 import com.networknt.service.SingletonServiceFactory;
-import io.undertow.UndertowOptions;
 import io.undertow.client.ClientCallback;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientExchange;
@@ -13,15 +12,11 @@ import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xnio.OptionMap;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,18 +26,20 @@ public class HttpClientBuilder {
     private static Cluster cluster = SingletonServiceFactory.getBean(Cluster.class);
     private static Http2Client client = Http2Client.getInstance();
     private HttpClientRequest httpClientRequest;
-
-    private static OptionMap http2OptionMap = OptionMap.create(UndertowOptions.ENABLE_HTTP2, true);
-    private static OptionMap http1OptionMap = OptionMap.EMPTY;
-
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ConnectionCacheManager connectionCacheManager = new ConnectionCacheManager();
 
     /**
      * Builder for issuing the request to the client.
      *
      * @return The response from the request.
+     * @throws URISyntaxException If a bad uri is provided for the given resource.
+     * @throws InterruptedException Could occur when establishing a connection.
+     * @throws ClientException Could occur when requesting a jwt an a connection couldn't be established to oauth
+     * @throws ApiException When requesting a JWT
+     * @throws TimeoutException If a timeout occurs in establishing a connection to the service.
+     * @throws ExecutionException If an issue other then a timeout occurs in establishing a connection to the service.
      */
-    public ClientResponse build() throws URISyntaxException, InterruptedException, ClientException, ApiException, TimeoutException, ExecutionException {
+    public ClientResponse build() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
         // Get a reference to the response
         final AtomicReference<ClientResponse> reference = new AtomicReference<>();
 
@@ -53,36 +50,16 @@ public class HttpClientBuilder {
             httpClientRequest.setClientRequest(clientRequest);
         }
 
-        // Send the request
-        this.getConnection().sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(reference));
+        ClientConnection clientConnection = connectionCacheManager.getConnection(this.getRequestHost(),
+                10000, httpClientRequest.getConnectionRequestTimeout(),
+                httpClientRequest.getHttp2Enabled());
 
-        this.awaitRequest();
+        // Send the request
+        clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(reference));
+
+        this.awaitResponse();
 
         return reference.get();
-    }
-
-    /**
-     * Get the connection before issuing the request. This method will spawn a thread within the cached thread pool
-     * for waiting before timing out.
-     *
-     * @return The connection.
-     * @throws URISyntaxException
-     * @throws TimeoutException
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    private ClientConnection getConnection() throws URISyntaxException, TimeoutException, ExecutionException, InterruptedException {
-        Future<ClientConnection> connectionFuture = executorService.submit(new ClientConnectionCallable(this.getRequestHost(), this.getOptionMap()));
-        try {
-            return connectionFuture.get(this.httpClientRequest.getConnectionTimeout().getTimeout(),
-                    this.httpClientRequest.getConnectionTimeout().getUnit());
-        } catch (TimeoutException e) {
-            logger.error("Timeout occurred when getting connection to: " + this.getRequestHost(), e);
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error occurred when getting connection.", e);
-            throw e;
-        }
     }
 
     /**
@@ -97,12 +74,6 @@ public class HttpClientBuilder {
                 httpClientRequest.getServiceDef().getRequestKey()));
     }
 
-    private OptionMap getOptionMap() {
-        if (this.httpClientRequest.getHttp2Enabled()) {
-            return http2OptionMap;
-        }
-        return http1OptionMap;
-    }
 
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
         return client.createClientCallback(reference, httpClientRequest.getLatch());
@@ -112,7 +83,7 @@ public class HttpClientBuilder {
      * Helper to use the latch to wait for the request to return within the given timeout (if provided).
      * @throws InterruptedException
      */
-    private void awaitRequest() throws InterruptedException {
+    private void awaitResponse() throws InterruptedException {
         if (this.httpClientRequest.getRequestTimeout() != null) {
             this.httpClientRequest.getLatch().await(this.httpClientRequest.getRequestTimeout().getTimeout(), this.httpClientRequest.getRequestTimeout().getUnit());
         } else {
@@ -154,13 +125,18 @@ public class HttpClientBuilder {
         return this;
     }
 
-    public HttpClientBuilder setConnectionTimeout(TimeoutDef timeout) {
-        this.httpClientRequest.setConnectionTimeout(timeout);
+    public HttpClientBuilder setConnectionRequestTimeout(TimeoutDef timeout) {
+        this.httpClientRequest.setConnectionRequestTimeout(timeout);
         return this;
     }
 
     public HttpClientBuilder setRequestTimeout(TimeoutDef timeout) {
         this.httpClientRequest.setRequestTimeout(timeout);
+        return this;
+    }
+
+    public HttpClientBuilder setConnectionCacheTTLms(long connectionCacheTTLms) {
+        this.httpClientRequest.setConnectionCacheTTLms(connectionCacheTTLms);
         return this;
     }
 }
