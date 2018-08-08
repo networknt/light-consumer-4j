@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 
 public class ConnectionCacheManager {
     private static Logger logger = LoggerFactory.getLogger(ConnectionCacheManager.class);
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ExecutorService executorService = Executors.newFixedThreadPool(2);
     private static Map<String, CacheableConnection> clientConnectionMap = new HashMap<>();
 
     private static OptionMap http2OptionMap = OptionMap.create(UndertowOptions.ENABLE_HTTP2, true);

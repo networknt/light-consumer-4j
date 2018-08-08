@@ -51,7 +51,7 @@ public class HttpClientBuilder {
         }
 
         ClientConnection clientConnection = connectionCacheManager.getConnection(this.getRequestHost(),
-                10000, httpClientRequest.getConnectionRequestTimeout(),
+                httpClientRequest.getConnectionCacheTTLms(), httpClientRequest.getConnectionRequestTimeout(),
                 httpClientRequest.getHttp2Enabled());
 
         // Send the request
