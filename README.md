@@ -1,15 +1,13 @@
-# Light Client All 4j
+# Light Consumer 4j
 
-A dependency resolution module to help consumers easily include all dependencies
-into their application.
+A module to help consumers easily integrate with light-4j apis.
 
 ### Usage
 
 ```xml
 <dependency>
     <groupId>com.networknt</groupId>
-    <artifactId>light-client-all-4j</artifactId>
+    <artifactId>light-consumer-4j</artifactId>
     <version>1.5.15</version>
 </dependency>
 ```
-
