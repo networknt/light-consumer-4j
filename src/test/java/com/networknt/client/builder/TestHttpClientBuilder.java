@@ -26,26 +26,27 @@ public class TestHttpClientBuilder {
                 .build();
 
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
-        System.out.println(clientResponse);
 
         // Verify connection created.
 
-//        new HttpClientBuilder()
-//                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
-//                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
-//                .setLatch(new CountDownLatch(1))
-//                .build();
+        clientResponse = new HttpClientBuilder()
+                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
+                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
+                .setLatch(new CountDownLatch(1))
+                .build();
 
         // Verify connection reused.
+        System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
 
-//        Thread.sleep(10000); // wait for connection to die
+        Thread.sleep(10000); // wait for connection to die
 
-//        new HttpClientBuilder()
-//                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
-//                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
-//                .setLatch(new CountDownLatch(1))
-//                .build();
+        clientResponse = new HttpClientBuilder()
+                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
+                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
+                .setLatch(new CountDownLatch(1))
+                .build();
 
         // Verify connection recreated.
+        System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
     }
 }
