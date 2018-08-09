@@ -24,7 +24,7 @@
     <packaging>jar</packaging>
     <name>Parent POM</name>
     <description>Light 4J Client Dependency Module</description>
-    <url>https://github.com/networknt/light-client-all-4j</url>
+    <url>https://github.com/networknt/light-consumer-4j</url>
 
     <developers>
         <developer>
@@ -36,7 +36,7 @@
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/networknt/light-client-all-4j/issues</url>
+        <url>https://github.com/networknt/light-consumer-4j/issues</url>
     </issueManagement>
 
     <licenses>
@@ -48,9 +48,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git://github.com:networknt/light-client-all-4j.git</connection>
-        <developerConnection>scm:git://github.com:networknt/light-client-all-4j.git</developerConnection>
-        <url>https://github.com:networknt/light-client-all-4j.git</url>
+        <connection>scm:git://github.com:networknt/light-consumer-4j.git</connection>
+        <developerConnection>scm:git://github.com:networknt/light-consumer-4j.git</developerConnection>
+        <url>https://github.com:networknt/light-consumer-4j.git</url>
     </scm>
 
     <distributionManagement>
