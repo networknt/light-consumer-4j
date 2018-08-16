@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.18](https://github.com/networknt/light-consumer-4j/tree/1.5.18) (2018-08-16)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.17...1.5.18)
+
+**Closed issues:**
+
+- flatten the config files into the same directory for k8s [\#5](https://github.com/networknt/light-consumer-4j/issues/5)
+
 ## [1.5.17](https://github.com/networknt/light-consumer-4j/tree/1.5.17) (2018-07-15)
 **Closed issues:**
 
