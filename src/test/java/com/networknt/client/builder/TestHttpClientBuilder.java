@@ -13,40 +13,44 @@ import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TestHttpClientBuilder {
 
     @Test @Ignore
     public void testHttpClientBuilder() throws ApiException, ClientException, InterruptedException, URISyntaxException, TimeoutException, ExecutionException {
-        ClientResponse clientResponse = new HttpClientBuilder()
-                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
+        HttpClientRequest clientRequest = new HttpClientBuilder()
+                .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
                 .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
                 .setConnectionCacheTTLms(10000)
-                .build();
+                .send();
 
+        ClientResponse clientResponse = clientRequest.awaitResponse();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
 
         // Verify connection created.
 
-        clientResponse = new HttpClientBuilder()
-                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
+        clientRequest = new HttpClientBuilder()
+                .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
                 .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
-                .build();
+                .send();
 
         // Verify connection reused.
+        clientResponse = clientRequest.awaitResponse();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
 
         Thread.sleep(10000); // wait for connection to die
 
-        clientResponse = new HttpClientBuilder()
-                .setServiceDef(new ServiceDef("https", "com.cibc.hello-3.0.1", null, null))
+        clientRequest = new HttpClientBuilder()
+                .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
                 .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
-                .build();
+                .send();
 
         // Verify connection recreated.
+        clientResponse = clientRequest.awaitResponse();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
     }
 }

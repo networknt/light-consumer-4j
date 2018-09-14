@@ -32,6 +32,7 @@ public class HttpClientBuilder {
     private static final String CONFIG_NAME = "consumer";
     private static final ConsumerConfig config = (ConsumerConfig) Config.getInstance().getJsonObjectConfig(CONFIG_NAME, ConsumerConfig.class);
 
+
     /**
      * Builder for issuing the request to the client.
      *
@@ -43,9 +44,9 @@ public class HttpClientBuilder {
      * @throws TimeoutException If a timeout occurs in establishing a connection to the service.
      * @throws ExecutionException If an issue other then a timeout occurs in establishing a connection to the service.
      */
-    public ClientResponse build() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
+    public HttpClientRequest send() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
         // Get a reference to the response
-        final AtomicReference<ClientResponse> reference = new AtomicReference<>();
+        httpClientRequest.setResponseReference(new AtomicReference<>());
 
         // Include the access token
         if (httpClientRequest.getAddCCToken()) {
@@ -59,11 +60,8 @@ public class HttpClientBuilder {
                 httpClientRequest.getHttp2Enabled());
 
         // Send the request
-        clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(reference));
-
-        this.awaitResponse();
-
-        return reference.get();
+        clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(httpClientRequest.getResponseReference()));
+        return this.httpClientRequest;
     }
 
     /**
@@ -82,17 +80,6 @@ public class HttpClientBuilder {
         return client.createClientCallback(reference, httpClientRequest.getLatch());
     }
 
-    /**
-     * Helper to use the latch to wait for the request to return within the given timeout (if provided).
-     * @throws InterruptedException
-     */
-    private void awaitResponse() throws InterruptedException {
-        if (this.httpClientRequest.getRequestTimeout() != null) {
-            this.httpClientRequest.getLatch().await(this.httpClientRequest.getRequestTimeout().getTimeout(), this.httpClientRequest.getRequestTimeout().getUnit());
-        } else {
-            this.httpClientRequest.getLatch().await();
-        }
-    }
 
     public HttpClientBuilder() {
         this.httpClientRequest = new HttpClientRequest();

@@ -1,9 +1,11 @@
 package com.networknt.client.builder;
 
 import io.undertow.client.ClientRequest;
+import io.undertow.client.ClientResponse;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HttpClientRequest {
     private ServiceDef serviceDef;
@@ -15,6 +17,20 @@ public class HttpClientRequest {
     private TimeoutDef connectionRequestTimeout = new TimeoutDef(2, TimeUnit.SECONDS);
     private TimeoutDef requestTimeout = new TimeoutDef(1, TimeUnit.SECONDS);
     private long connectionCacheTTLms = 10000;
+    private AtomicReference<ClientResponse> responseReference;
+
+    /**
+     * Wait for the request to return within the given timeout (if provided).
+     * @throws InterruptedException
+     */
+    public ClientResponse awaitResponse() throws InterruptedException {
+        if (this.getRequestTimeout() != null) {
+            this.getLatch().await(this.getRequestTimeout().getTimeout(), this.getRequestTimeout().getUnit());
+        } else {
+            this.getLatch().await();
+        }
+        return responseReference.get();
+    }
 
     public ServiceDef getServiceDef() {
         return serviceDef;
@@ -86,5 +102,13 @@ public class HttpClientRequest {
 
     public void setConnectionCacheTTLms(long connectionCacheTTLms) {
         this.connectionCacheTTLms = connectionCacheTTLms;
+    }
+
+    public AtomicReference<ClientResponse> getResponseReference() {
+        return responseReference;
+    }
+
+    public void setResponseReference(AtomicReference<ClientResponse> responseReference) {
+        this.responseReference = responseReference;
     }
 }
