@@ -1,7 +1,9 @@
 package com.networknt.client.builder;
 
 import com.networknt.client.Http2Client;
+import com.networknt.client.model.ConsumerConfig;
 import com.networknt.cluster.Cluster;
+import com.networknt.config.Config;
 import com.networknt.exception.ApiException;
 import com.networknt.exception.ClientException;
 import com.networknt.service.SingletonServiceFactory;
@@ -27,6 +29,9 @@ public class HttpClientBuilder {
     private static Http2Client client = Http2Client.getInstance();
     private HttpClientRequest httpClientRequest;
     private static ConnectionCacheManager connectionCacheManager = new ConnectionCacheManager();
+    private static final String CONFIG_NAME = "consumer";
+    private static final ConsumerConfig config = (ConsumerConfig) Config.getInstance().getJsonObjectConfig(CONFIG_NAME, ConsumerConfig.class);
+
 
     /**
      * Builder for issuing the request to the client.
@@ -39,9 +44,9 @@ public class HttpClientBuilder {
      * @throws TimeoutException If a timeout occurs in establishing a connection to the service.
      * @throws ExecutionException If an issue other then a timeout occurs in establishing a connection to the service.
      */
-    public ClientResponse build() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
+    public HttpClientRequest send() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
         // Get a reference to the response
-        final AtomicReference<ClientResponse> reference = new AtomicReference<>();
+        httpClientRequest.setResponseReference(new AtomicReference<>());
 
         // Include the access token
         if (httpClientRequest.getAddCCToken()) {
@@ -55,11 +60,8 @@ public class HttpClientBuilder {
                 httpClientRequest.getHttp2Enabled());
 
         // Send the request
-        clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(reference));
-
-        this.awaitResponse();
-
-        return reference.get();
+        clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(httpClientRequest.getResponseReference()));
+        return this.httpClientRequest;
     }
 
     /**
@@ -74,28 +76,24 @@ public class HttpClientBuilder {
                 httpClientRequest.getServiceDef().getRequestKey()));
     }
 
-
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
         return client.createClientCallback(reference, httpClientRequest.getLatch());
     }
 
-    /**
-     * Helper to use the latch to wait for the request to return within the given timeout (if provided).
-     * @throws InterruptedException
-     */
-    private void awaitResponse() throws InterruptedException {
-        if (this.httpClientRequest.getRequestTimeout() != null) {
-            this.httpClientRequest.getLatch().await(this.httpClientRequest.getRequestTimeout().getTimeout(), this.httpClientRequest.getRequestTimeout().getUnit());
-        } else {
-            this.httpClientRequest.getLatch().await();
-        }
-    }
 
     public HttpClientBuilder() {
         this.httpClientRequest = new HttpClientRequest();
     }
 
     public HttpClientBuilder setServiceDef(ServiceDef serviceDef) {
+        if (serviceDef.getEnvironment() == null) { // get env from service.yml config
+            String env = config.getServiceEnv().get(serviceDef.getServiceId());
+            if (env != null && env.length() > 0) {
+                serviceDef.setEnvironment(env);
+            } else {
+                throw new RuntimeException("Service \"" + serviceDef.getServiceId() + "\" was not configured with an environment.");
+            }
+        }
         this.httpClientRequest.setServiceDef(serviceDef);
         return this;
     }
