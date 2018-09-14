@@ -1,7 +1,9 @@
 package com.networknt.client.builder;
 
 import com.networknt.client.Http2Client;
+import com.networknt.client.model.ConsumerConfig;
 import com.networknt.cluster.Cluster;
+import com.networknt.config.Config;
 import com.networknt.exception.ApiException;
 import com.networknt.exception.ClientException;
 import com.networknt.service.SingletonServiceFactory;
@@ -27,6 +29,8 @@ public class HttpClientBuilder {
     private static Http2Client client = Http2Client.getInstance();
     private HttpClientRequest httpClientRequest;
     private static ConnectionCacheManager connectionCacheManager = new ConnectionCacheManager();
+    private static final String CONFIG_NAME = "consumer";
+    private static final ConsumerConfig config = (ConsumerConfig) Config.getInstance().getJsonObjectConfig(CONFIG_NAME, ConsumerConfig.class);
 
     /**
      * Builder for issuing the request to the client.
@@ -74,7 +78,6 @@ public class HttpClientBuilder {
                 httpClientRequest.getServiceDef().getRequestKey()));
     }
 
-
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
         return client.createClientCallback(reference, httpClientRequest.getLatch());
     }
@@ -96,6 +99,14 @@ public class HttpClientBuilder {
     }
 
     public HttpClientBuilder setServiceDef(ServiceDef serviceDef) {
+        if (serviceDef.getEnvironment() == null) { // get env from service.yml config
+            String env = config.getServiceEnv().get(serviceDef.getServiceId());
+            if (env != null && env.length() > 0) {
+                serviceDef.setEnvironment(env);
+            } else {
+                throw new RuntimeException("Service \"" + serviceDef.getServiceId() + "\" was not configured with an environment.");
+            }
+        }
         this.httpClientRequest.setServiceDef(serviceDef);
         return this;
     }

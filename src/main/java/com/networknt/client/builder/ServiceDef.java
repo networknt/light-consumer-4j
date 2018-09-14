@@ -6,11 +6,18 @@ public class ServiceDef {
     private String environment;
     private String requestKey;
 
+    // To pick up the environment from config
+    public ServiceDef(String protocol, String serviceId, String requestKey) {
+        this.protocol = protocol;
+        this.serviceId = serviceId;
+        this.requestKey = requestKey;
+    }
+
     public ServiceDef(String protocol, String serviceId, String environment, String requestKey) {
         this.protocol = protocol;
         this.serviceId = serviceId;
-        this.environment = environment;
         this.requestKey = requestKey;
+        this.environment = environment;
     }
 
     public String getProtocol() {
