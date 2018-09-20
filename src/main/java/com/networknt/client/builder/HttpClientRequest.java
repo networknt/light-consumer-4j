@@ -3,33 +3,37 @@ package com.networknt.client.builder;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class HttpClientRequest {
+public class HttpClientRequest implements AutoCloseable {
     private ServiceDef serviceDef;
     private Boolean isHttp2Enabled = true;
     private ClientRequest clientRequest;
     private Boolean addCCToken = false;
     private Boolean propagateHeaders = false;
     private CountDownLatch latch;
-    private TimeoutDef connectionRequestTimeout = new TimeoutDef(2, TimeUnit.SECONDS);
-    private TimeoutDef requestTimeout = new TimeoutDef(1, TimeUnit.SECONDS);
+    private TimeoutDef connectionRequestTimeout = new TimeoutDef(5, TimeUnit.SECONDS);
+    private TimeoutDef requestTimeout = new TimeoutDef(5, TimeUnit.SECONDS);
     private long connectionCacheTTLms = 10000;
     private AtomicReference<ClientResponse> responseReference;
 
-    /**
-     * Wait for the request to return within the given timeout (if provided).
-     * @throws InterruptedException
-     */
-    public ClientResponse awaitResponse() throws InterruptedException {
-        if (this.getRequestTimeout() != null) {
-            this.getLatch().await(this.getRequestTimeout().getTimeout(), this.getRequestTimeout().getUnit());
-        } else {
-            this.getLatch().await();
-        }
-        return responseReference.get();
+    // Cached thread pool as we might expect many short-lived threads..
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+
+    Future<ClientResponse> triggerLatchAwait() {
+        return executorService.submit(() -> {
+            try {
+                if (requestTimeout != null) {
+                    latch.await(requestTimeout.getTimeout(), requestTimeout.getUnit());
+                } else {
+                    latch.await();
+                }
+                return responseReference.get();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public ServiceDef getServiceDef() {
@@ -110,5 +114,10 @@ public class HttpClientRequest {
 
     public void setResponseReference(AtomicReference<ClientResponse> responseReference) {
         this.responseReference = responseReference;
+    }
+
+    @Override
+    public void close() throws Exception {
+        executorService.shutdown();
     }
 }

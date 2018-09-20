@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,7 +33,6 @@ public class HttpClientBuilder {
     private static final String CONFIG_NAME = "consumer";
     private static final ConsumerConfig config = (ConsumerConfig) Config.getInstance().getJsonObjectConfig(CONFIG_NAME, ConsumerConfig.class);
 
-
     /**
      * Builder for issuing the request to the client.
      *
@@ -44,7 +44,7 @@ public class HttpClientBuilder {
      * @throws TimeoutException If a timeout occurs in establishing a connection to the service.
      * @throws ExecutionException If an issue other then a timeout occurs in establishing a connection to the service.
      */
-    public HttpClientRequest send() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
+    public Future<ClientResponse> send() throws URISyntaxException, InterruptedException, ApiException, TimeoutException, ExecutionException, ClientException {
         // Get a reference to the response
         httpClientRequest.setResponseReference(new AtomicReference<>());
 
@@ -61,7 +61,9 @@ public class HttpClientBuilder {
 
         // Send the request
         clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(httpClientRequest.getResponseReference()));
-        return this.httpClientRequest;
+
+        // Start a thread to wait for the timeout if provided.
+        return this.httpClientRequest.triggerLatchAwait();
     }
 
     /**

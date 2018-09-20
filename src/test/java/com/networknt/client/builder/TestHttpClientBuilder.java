@@ -12,21 +12,21 @@ import org.junit.Test;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class TestHttpClientBuilder {
 
     @Test @Ignore
     public void testHttpClientBuilder() throws ApiException, ClientException, InterruptedException, URISyntaxException, TimeoutException, ExecutionException {
-        HttpClientRequest clientRequest = new HttpClientBuilder()
+        Future<ClientResponse> clientRequest = new HttpClientBuilder()
                 .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
                 .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
                 .setConnectionCacheTTLms(10000)
                 .send();
 
-        ClientResponse clientResponse = clientRequest.awaitResponse();
+        ClientResponse clientResponse = clientRequest.get();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
 
         // Verify connection created.
@@ -38,7 +38,7 @@ public class TestHttpClientBuilder {
                 .send();
 
         // Verify connection reused.
-        clientResponse = clientRequest.awaitResponse();
+        clientResponse = clientRequest.get();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
 
         Thread.sleep(10000); // wait for connection to die
@@ -50,7 +50,7 @@ public class TestHttpClientBuilder {
                 .send();
 
         // Verify connection recreated.
-        clientResponse = clientRequest.awaitResponse();
+        clientResponse = clientRequest.get();
         System.out.println(clientResponse.getAttachment(Http2Client.RESPONSE_BODY));
     }
 }
