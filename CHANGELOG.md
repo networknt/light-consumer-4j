@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.19](https://github.com/networknt/light-consumer-4j/tree/1.5.19) (2018-09-22)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.18...1.5.19)
+
+**Merged pull requests:**
+
+- Feature/interface changes [\#6](https://github.com/networknt/light-consumer-4j/pull/6) ([NicholasAzar](https://github.com/NicholasAzar))
+
 ## [1.5.18](https://github.com/networknt/light-consumer-4j/tree/1.5.18) (2018-08-16)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.17...1.5.18)
 
