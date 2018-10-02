@@ -22,6 +22,6 @@ public class ClientConnectionCallable implements Callable<ClientConnection> {
     @Override
     public ClientConnection call() throws Exception {
         return client.connect(this.host, Http2Client.WORKER, Http2Client.SSL,
-                Http2Client.POOL, this.options).get();
+                Http2Client.BUFFER_POOL, this.options).get();
     }
 }
