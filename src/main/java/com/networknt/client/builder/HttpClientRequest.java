@@ -10,6 +10,7 @@ public class HttpClientRequest implements AutoCloseable {
     private ServiceDef serviceDef;
     private Boolean isHttp2Enabled = true;
     private ClientRequest clientRequest;
+    private String requestBody;
     private Boolean addCCToken = false;
     private Boolean propagateHeaders = false;
     private CountDownLatch latch;
@@ -119,5 +120,13 @@ public class HttpClientRequest implements AutoCloseable {
     @Override
     public void close() throws Exception {
         executorService.shutdown();
+    }
+
+    public String getRequestBody() {
+        return requestBody;
+    }
+
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
     }
 }

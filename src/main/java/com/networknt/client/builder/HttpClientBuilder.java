@@ -79,9 +79,11 @@ public class HttpClientBuilder {
     }
 
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
-        return client.createClientCallback(reference, httpClientRequest.getLatch());
+        if (httpClientRequest.getRequestBody() == null) {
+            return client.createClientCallback(reference, httpClientRequest.getLatch());
+        }
+        return client.createClientCallback(reference, httpClientRequest.getLatch(), httpClientRequest.getRequestBody());
     }
-
 
     public HttpClientBuilder() {
         this.httpClientRequest = new HttpClientRequest();
@@ -107,6 +109,11 @@ public class HttpClientBuilder {
 
     public HttpClientBuilder setClientRequest(ClientRequest clientRequest) {
         this.httpClientRequest.setClientRequest(clientRequest);
+        return this;
+    }
+
+    public HttpClientBuilder setRequestBody(String requestBody) {
+        this.httpClientRequest.setRequestBody(requestBody);
         return this;
     }
 

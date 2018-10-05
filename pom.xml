@@ -66,6 +66,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <versions.maven-version>2.4</versions.maven-version>
         <version.logback>1.2.3</version.logback>
