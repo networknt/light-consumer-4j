@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.5.21](https://github.com/networknt/light-consumer-4j/tree/1.5.21) (2018-10-26)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.20...1.5.21)
+
+**Fixed bugs:**
+
+- Add missed support to include body in requests [\#7](https://github.com/networknt/light-consumer-4j/issues/7)
+
+## [1.5.20](https://github.com/networknt/light-consumer-4j/tree/1.5.20) (2018-10-03)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.19...1.5.20)
+
 ## [1.5.19](https://github.com/networknt/light-consumer-4j/tree/1.5.19) (2018-09-22)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.18...1.5.19)
 
