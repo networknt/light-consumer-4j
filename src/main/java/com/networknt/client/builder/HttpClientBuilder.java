@@ -12,11 +12,13 @@ import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientExchange;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
+import io.undertow.util.HttpString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -73,9 +75,9 @@ public class HttpClientBuilder {
      * @throws URISyntaxException
      */
     private URI getRequestHost() throws URISyntaxException {
-        return new URI(cluster.serviceToUrl(httpClientRequest.getServiceDef().getProtocol(),
+        return new URI(httpClientRequest.getServiceDef()!=null ?cluster.serviceToUrl(httpClientRequest.getServiceDef().getProtocol(),
                 httpClientRequest.getServiceDef().getServiceId(), httpClientRequest.getServiceDef().getEnvironment(),
-                httpClientRequest.getServiceDef().getRequestKey()));
+                httpClientRequest.getServiceDef().getRequestKey()) : httpClientRequest.getApiHost());
     }
 
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
@@ -113,7 +115,7 @@ public class HttpClientBuilder {
     }
 
     public HttpClientBuilder setRequestBody(String requestBody) {
-        this.httpClientRequest.setRequestBody(requestBody);
+        if (requestBody!=null) this.httpClientRequest.setRequestBody(requestBody);
         return this;
     }
 
@@ -144,6 +146,21 @@ public class HttpClientBuilder {
 
     public HttpClientBuilder setConnectionCacheTTLms(long connectionCacheTTLms) {
         this.httpClientRequest.setConnectionCacheTTLms(connectionCacheTTLms);
+        return this;
+    }
+
+    public HttpClientBuilder setApiHost(String apiUrl) {
+        this.httpClientRequest.setApiHost(apiUrl);
+        return this;
+    }
+
+    public HttpClientBuilder setHeaderMap(Map<String, ?> headMap) {
+        this.httpClientRequest.setHeaderMap(headMap);
+        return this;
+    }
+
+    public HttpClientBuilder setHeaderValue(HttpString headerName, String headerValue) {
+        this.httpClientRequest.setHeaderValue(headerName, headerValue);
         return this;
     }
 }
