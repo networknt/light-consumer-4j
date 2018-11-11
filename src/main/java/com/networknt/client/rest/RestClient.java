@@ -1,5 +1,7 @@
 package com.networknt.client.rest;
 
+import com.networknt.client.builder.ServiceDef;
+
 import java.util.Map;
 
 public interface RestClient {
@@ -18,6 +20,16 @@ public interface RestClient {
 
     /**
      * Retrieve a representation by doing a GET on the specified URL.
+     * The response (if any) is converted and returned.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param responseType the type of the return value
+     * @return the converted object
+     */
+    <T> T get(ServiceDef serviceDef, String path, Class<T> responseType) throws RestClientException;
+
+    /**
+     * Retrieve a representation by doing a GET on the specified URL.
      * The response return with Json format string.
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
@@ -25,6 +37,14 @@ public interface RestClient {
      */
     <T> T get(String url, String path) throws RestClientException;
 
+    /**
+     * Retrieve a representation by doing a GET on the specified URL.
+     * The response return with Json format string.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @return the JSON format object
+     */
+    <T> T get(ServiceDef serviceDef, String path) throws RestClientException;
     /**
      * Retrieve a representation by doing a GET on the URI template.
      * The response (if any) is converted and returned.
@@ -49,6 +69,16 @@ public interface RestClient {
 
     /**
      * Retrieve a representation by doing a POST on the specified URL.
+     * The response (if any) is converted and returned.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param responseType the type of the return value
+     * @param requestBody REQUEST BODY
+     * @return the converted object
+     */
+    <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, String requestBody) throws RestClientException;
+    /**
+     * Retrieve a representation by doing a POST on the specified URL.
      * The response return with Json format string.
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
@@ -57,6 +87,15 @@ public interface RestClient {
      */
     <T> T post(String url, String path,  String requestBody) throws RestClientException;
 
+    /**
+     * Retrieve a representation by doing a POST on the specified URL.
+     * The response return with Json format string.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param requestBody REQUEST BODY
+     * @return the JSON format object
+     */
+    <T> T post(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException;
     /**
      * Retrieve a representation by doing a POST on the URI template.
      * The response (if any) is converted and returned.
@@ -80,6 +119,15 @@ public interface RestClient {
     String put(String url, String path,  String requestBody) throws RestClientException;
 
     /**
+     * Retrieve a representation by doing a PUT on the specified URL.
+     * The response return with Json format string.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param requestBody REQUEST BODY
+     * @return the JSON format string
+     */
+    String put(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException;
+    /**
      * Retrieve a representation by doing a PUT on the URI template.
      * The response (if any) is converted and returned.
      * @param url the URL
@@ -99,6 +147,14 @@ public interface RestClient {
      */
     String delete(String url, String path) throws RestClientException;
 
+    /**
+     * Retrieve a representation by doing a DELETE on the specified URL.
+     * The response return with Json format string.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @return the JSON format string
+     */
+    String delete(ServiceDef serviceDef, String path) throws RestClientException;
     /**
      * Retrieve a representation by doing a PUT on the URI template.
      * The response (if any) is converted and returned.

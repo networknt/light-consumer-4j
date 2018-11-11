@@ -2,6 +2,7 @@ package com.networknt.client.rest;
 
 import com.networknt.client.Http2Client;
 import com.networknt.client.builder.HttpClientBuilder;
+import com.networknt.client.builder.ServiceDef;
 import com.networknt.config.Config;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
@@ -29,6 +30,16 @@ public class LightRestClient implements RestClient{
     }
 
     @Override
+    public <T> T get(ServiceDef serviceDef, String path, Class<T> responseType) throws RestClientException {
+        return execute(serviceDef, path, responseType, null, Methods.GET, null);
+    }
+
+    @Override
+    public String  get(ServiceDef serviceDef, String path) throws RestClientException {
+        return get(serviceDef, path, String.class);
+    }
+
+    @Override
     public <T> T get(String url,  String path, Class<T> responseType, Map<String, ?> headerMap) throws RestClientException {
         return execute(url, path, responseType, headerMap, Methods.GET, null);
     }
@@ -49,6 +60,16 @@ public class LightRestClient implements RestClient{
     }
 
     @Override
+    public  String  post(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException {
+        return post(serviceDef, path, String.class,requestBody );
+    }
+
+    @Override
+    public <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, String requestBody) throws RestClientException {
+        return execute(serviceDef, path, responseType, null, Methods.POST, requestBody);
+    }
+
+    @Override
     public  String put(String url, String path,  String requestBody) throws RestClientException {
         return put(url, path, null, requestBody);
     }
@@ -56,6 +77,11 @@ public class LightRestClient implements RestClient{
     @Override
     public  String put(String url,  String path,  Map<String, ?> headerMap,  String requestBody) throws RestClientException {
          return execute(url, path, String.class, headerMap, Methods.PUT, requestBody);
+    }
+
+    @Override
+    public String put(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException {
+        return execute(serviceDef, path, String.class, null, Methods.PUT, requestBody);
     }
 
     @Override
@@ -68,11 +94,36 @@ public class LightRestClient implements RestClient{
         return execute(url, path, String.class, headerMap, Methods.DELETE, requestBody);
     }
 
+    @Override
+    public String delete(ServiceDef serviceDef, String path) throws RestClientException{
+        return execute(serviceDef, path, String.class, null, Methods.DELETE, null);
+    }
+
     protected <T> T execute (String url,  String path, Class<T> responseType, Map<String, ?> headerMap, HttpString method, String requestBody) throws RestClientException {
         try {
             Future<ClientResponse> clientRequest = new HttpClientBuilder()
                     .setClientRequest(new ClientRequest().setPath(path).setMethod(method))
                     .setApiHost(url)
+                    .setHeaderMap(headerMap)
+                    .setRequestBody(requestBody)
+                    .setLatch(new CountDownLatch(1))
+                    .setConnectionCacheTTLms(10000)
+                    .send();
+
+            ClientResponse clientResponse = clientRequest.get();
+            return Config.getInstance().getMapper().readValue(clientResponse.getAttachment(Http2Client.RESPONSE_BODY), responseType);
+
+        } catch (Exception e) {
+            logger.error("Error occurred when calling service.", e);
+            throw new RestClientException("Light restful service call exception;" + e);
+        }
+    }
+
+    protected <T> T execute (ServiceDef serviceDef, String path, Class<T> responseType, Map<String, ?> headerMap, HttpString method, String requestBody) throws RestClientException {
+        try {
+            Future<ClientResponse> clientRequest = new HttpClientBuilder()
+                    .setServiceDef(serviceDef)
+                    .setClientRequest(new ClientRequest().setPath(path).setMethod(method))
                     .setHeaderMap(headerMap)
                     .setRequestBody(requestBody)
                     .setLatch(new CountDownLatch(1))
