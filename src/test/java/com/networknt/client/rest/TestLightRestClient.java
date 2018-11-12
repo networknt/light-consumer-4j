@@ -3,7 +3,6 @@ package com.networknt.client.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.networknt.client.Http2Client;
 
-import com.networknt.client.oauth.TokenResponse;
 import com.networknt.config.Config;
 import com.networknt.exception.ClientException;
 import io.undertow.UndertowOptions;
@@ -22,7 +21,6 @@ import org.xnio.OptionMap;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertNotNull;
@@ -33,14 +31,13 @@ public class TestLightRestClient {
 
 
     private static LightRestClient lightRestClient;
-    static Http2Client client = Http2Client.getInstance();
     static final Logger logger = LoggerFactory.getLogger(TestLightRestClient.class);
     @BeforeClass
     public static void setUp() {
         lightRestClient = new LightRestClient();
     }
 
-    @Test
+    @Test @Ignore
     public void testGetMethod() throws RestClientException, Exception {
 
         final Http2Client client = Http2Client.getInstance();
@@ -74,8 +71,16 @@ public class TestLightRestClient {
 
     @Test @Ignore
     public void testGet() throws RestClientException, Exception {
-        String str = lightRestClient.get("https://localhost:8443", "/v1/pets");
+        String str = lightRestClient.get("https://localhost:8443", "/v1/pets/1", String.class);
+
+        System.out.println(str);
         assertNotNull(str);
+    }
+
+    @Test @Ignore
+    public void testGetWithType() throws RestClientException, Exception {
+        Pet pet = lightRestClient.get("https://localhost:8443", "/v1/pets/1", Pet.class);
+        assertTrue(pet.getId()==1);
     }
 
 

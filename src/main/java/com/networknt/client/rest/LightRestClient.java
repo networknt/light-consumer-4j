@@ -111,6 +111,9 @@ public class LightRestClient implements RestClient{
                     .send();
 
             ClientResponse clientResponse = clientRequest.get();
+            if (responseType.equals(String.class)) {
+                return (T)clientResponse.getAttachment(Http2Client.RESPONSE_BODY);
+            }
             return Config.getInstance().getMapper().readValue(clientResponse.getAttachment(Http2Client.RESPONSE_BODY), responseType);
 
         } catch (Exception e) {
@@ -130,7 +133,11 @@ public class LightRestClient implements RestClient{
                     .setConnectionCacheTTLms(10000)
                     .send();
 
+
             ClientResponse clientResponse = clientRequest.get();
+            if (responseType.equals(String.class)) {
+                return (T)clientResponse.getAttachment(Http2Client.RESPONSE_BODY);
+            }
             return Config.getInstance().getMapper().readValue(clientResponse.getAttachment(Http2Client.RESPONSE_BODY), responseType);
 
         } catch (Exception e) {
