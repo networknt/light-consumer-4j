@@ -2,7 +2,9 @@ package com.networknt.client.builder;
 
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
+import io.undertow.util.HttpString;
 
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,6 +20,8 @@ public class HttpClientRequest implements AutoCloseable {
     private TimeoutDef requestTimeout = new TimeoutDef(5, TimeUnit.SECONDS);
     private long connectionCacheTTLms = 10000;
     private AtomicReference<ClientResponse> responseReference;
+
+    private String apiHost;
 
     // Cached thread pool as we might expect many short-lived threads..
     private ExecutorService executorService = Executors.newCachedThreadPool();
@@ -128,5 +132,23 @@ public class HttpClientRequest implements AutoCloseable {
 
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public void setHeaderValue(HttpString headerName, String headerValue) {
+        getClientRequest().getRequestHeaders().put(headerName, headerValue);
+    }
+
+    public void setHeaderMap(Map<String, ?> headMap) {
+        if (headMap!=null) {
+            headMap.forEach((k,v)->getClientRequest().getRequestHeaders().put(new HttpString(k), v.toString()));
+        }
+     }
+
+    public String getApiHost() {
+        return apiHost;
+    }
+
+    public void setApiHost(String apiHost) {
+        this.apiHost = apiHost;
     }
 }
