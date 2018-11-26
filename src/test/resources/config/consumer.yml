@@ -1,2 +1,3 @@
 serviceEnv:
   com.networknt.sample-1: dev1
+  com.networknt.hello-1: dev1
