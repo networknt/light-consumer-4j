@@ -34,6 +34,7 @@ public class HttpClientBuilder {
     private static ConnectionCacheManager connectionCacheManager = new ConnectionCacheManager();
     private static final String CONFIG_NAME = "consumer";
     private static final ConsumerConfig config = (ConsumerConfig) Config.getInstance().getJsonObjectConfig(CONFIG_NAME, ConsumerConfig.class);
+    private String serviceUrl;
 
     /**
      * Builder for issuing the request to the client.
@@ -69,15 +70,32 @@ public class HttpClientBuilder {
     }
 
     /**
+     * Get the resolved serviceUrl
+     *
+     * @return
+     */
+    public String getServiceUrl() {
+        return serviceUrl;
+    }
+
+    /**
+     * Set the resolved serviceUrl (from service definition)
+     *
+     * @param serviceUrl
+     */
+    private void setServiceUrl(String serviceUrl) {
+        this.serviceUrl = serviceUrl;
+    }
+
+
+    /**
      * Gets the URI to the server it will connect to using the cluster load balancer.
      *
      * @return
      * @throws URISyntaxException
      */
     private URI getRequestHost() throws URISyntaxException {
-        return new URI(httpClientRequest.getServiceDef()!=null ?cluster.serviceToUrl(httpClientRequest.getServiceDef().getProtocol(),
-                httpClientRequest.getServiceDef().getServiceId(), httpClientRequest.getServiceDef().getEnvironment(),
-                httpClientRequest.getServiceDef().getRequestKey()) : httpClientRequest.getApiHost());
+        return new URI(httpClientRequest.getServiceDef()!=null ? serviceUrl : httpClientRequest.getApiHost());
     }
 
     private ClientCallback<ClientExchange> getClientCallback(AtomicReference<ClientResponse> reference) {
@@ -101,6 +119,9 @@ public class HttpClientBuilder {
             }
         }
         this.httpClientRequest.setServiceDef(serviceDef);
+        this.setServiceUrl(cluster.serviceToUrl(httpClientRequest.getServiceDef().getProtocol(),
+                httpClientRequest.getServiceDef().getServiceId(), httpClientRequest.getServiceDef().getEnvironment(),
+                httpClientRequest.getServiceDef().getRequestKey()));
         return this;
     }
 
