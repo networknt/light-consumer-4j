@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.5.23](https://github.com/networknt/light-consumer-4j/tree/1.5.23) (2018-12-01)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.22...1.5.23)
+
+**Closed issues:**
+
+- Expose discovered server url in the builder class [\#9](https://github.com/networknt/light-consumer-4j/issues/9)
+
+**Merged pull requests:**
+
+- Issue \#9 \(API-5\) - save the discovered server URL and expose the save… [\#10](https://github.com/networknt/light-consumer-4j/pull/10) ([zabooma](https://github.com/zabooma))
+- Restful client call template  [\#8](https://github.com/networknt/light-consumer-4j/pull/8) ([chenyan71](https://github.com/chenyan71))
+
+## [1.5.22](https://github.com/networknt/light-consumer-4j/tree/1.5.22) (2018-11-10)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.21...1.5.22)
+
 ## [1.5.21](https://github.com/networknt/light-consumer-4j/tree/1.5.21) (2018-10-26)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.20...1.5.21)
 
