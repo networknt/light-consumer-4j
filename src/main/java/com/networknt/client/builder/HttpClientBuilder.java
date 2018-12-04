@@ -63,7 +63,8 @@ public class HttpClientBuilder {
         URI requestHost = this.getRequestHost();
 
         // Ensure host header exists
-        if (httpClientRequest.getClientRequest().getRequestHeaders().get(Headers.HOST) == null) {
+        if (httpClientRequest.getClientRequest().getRequestHeaders().get(Headers.HOST) == null ||
+                httpClientRequest.getClientRequest().getRequestHeaders().get(Headers.HOST).equals("")) {
             ClientRequest clientRequest = httpClientRequest.getClientRequest();
             String hostHeader = requestHost.getHost();
             clientRequest.getRequestHeaders().put(Headers.HOST, hostHeader);
