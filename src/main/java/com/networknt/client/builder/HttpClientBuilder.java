@@ -13,6 +13,7 @@ import io.undertow.client.ClientExchange;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import io.undertow.util.HttpString;
+import io.undertow.util.Headers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,17 @@ public class HttpClientBuilder {
             httpClientRequest.setClientRequest(clientRequest);
         }
 
-        ClientConnection clientConnection = connectionCacheManager.getConnection(this.getRequestHost(),
+        // Get the URI
+        URI requestHost = this.getRequestHost();
+
+        // Ensure host header exists
+        if (httpClientRequest.getClientRequest().getRequestHeaders().get(Headers.HOST) == null) {
+            ClientRequest clientRequest = httpClientRequest.getClientRequest();
+            String hostHeader = requestHost.getHost();
+            clientRequest.getRequestHeaders().put(Headers.HOST, hostHeader);
+        }
+
+        ClientConnection clientConnection = connectionCacheManager.getConnection(requestHost,
                 httpClientRequest.getConnectionCacheTTLms(), httpClientRequest.getConnectionRequestTimeout(),
                 httpClientRequest.getHttp2Enabled());
 

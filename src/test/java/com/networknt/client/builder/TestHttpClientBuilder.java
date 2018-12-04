@@ -29,7 +29,7 @@ public class TestHttpClientBuilder {
     public void testHttpClientBuilder() throws ApiException, ClientException, InterruptedException, URISyntaxException, TimeoutException, ExecutionException {
         Future<ClientResponse> clientRequest = new HttpClientBuilder()
                 .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
-                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
+                .setClientRequest(new ClientRequest().setPath("/v1/customers/1").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
                 .setConnectionCacheTTLms(10000)
                 .send();
@@ -41,7 +41,7 @@ public class TestHttpClientBuilder {
 
         clientRequest = new HttpClientBuilder()
                 .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
-                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
+                .setClientRequest(new ClientRequest().setPath("/v1/customers/1").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
                 .send();
 
@@ -53,7 +53,7 @@ public class TestHttpClientBuilder {
 
         clientRequest = new HttpClientBuilder()
                 .setServiceDef(new ServiceDef("https", "com.networknt.hello-1", null))
-                .setClientRequest(new ClientRequest().setPath("/v1/hello").setMethod(Methods.GET))
+                .setClientRequest(new ClientRequest().setPath("/v1/customers/1").setMethod(Methods.GET))
                 .setLatch(new CountDownLatch(1))
                 .send();
 
