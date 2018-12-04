@@ -53,10 +53,14 @@ public class HttpClientBuilder {
         httpClientRequest.setResponseReference(new AtomicReference<>());
 
         // Include the access token
-        if (httpClientRequest.getAddCCToken()) {
-            ClientRequest clientRequest = httpClientRequest.getClientRequest();
-            client.addCcToken(clientRequest);
-            httpClientRequest.setClientRequest(clientRequest);
+        ClientRequest clientRequest = httpClientRequest.getClientRequest();
+        String authToken= httpClientRequest.getAuthToken();
+        if (authToken!=null&&!authToken.isEmpty()) {
+            client.addAuthToken(clientRequest, httpClientRequest.getAuthToken());
+        } else {
+            if (httpClientRequest.getAddCCToken()) {
+                client.addCcToken(clientRequest);
+            }
         }
 
         // Get the URI
@@ -155,6 +159,13 @@ public class HttpClientBuilder {
     public HttpClientBuilder addCCToken() {
         this.httpClientRequest.setAddCCToken(true);
         return this;
+    }
+    public HttpClientBuilder setAuthToken(String authToken) {
+        this.httpClientRequest.setAuthToken(authToken);
+        return this;
+    }
+    public String getAuthToken() {
+        return this.httpClientRequest.getAuthToken();
     }
 
     public HttpClientBuilder propagateHeaders() {

@@ -14,6 +14,7 @@ public class HttpClientRequest implements AutoCloseable {
     private ClientRequest clientRequest;
     private String requestBody;
     private Boolean addCCToken = false;
+    private String authToken;
     private Boolean propagateHeaders = false;
     private CountDownLatch latch;
     private TimeoutDef connectionRequestTimeout = new TimeoutDef(5, TimeUnit.SECONDS);
@@ -150,5 +151,13 @@ public class HttpClientRequest implements AutoCloseable {
 
     public void setApiHost(String apiHost) {
         this.apiHost = apiHost;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }
