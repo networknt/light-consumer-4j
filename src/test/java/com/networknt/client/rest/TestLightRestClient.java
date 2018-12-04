@@ -3,6 +3,7 @@ package com.networknt.client.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.networknt.client.Http2Client;
 
+import com.networknt.client.builder.HttpClientBuilder;
 import com.networknt.config.Config;
 import com.networknt.exception.ClientException;
 import io.undertow.UndertowOptions;
@@ -93,5 +94,12 @@ public class TestLightRestClient {
         String requestBody = Config.getInstance().getMapper().writeValueAsString(pet);
         String str = lightRestClient.post("https://localhost:8443", "/v1/pets", requestBody);
         assertNotNull(str);
+    }
+
+    @Test@Ignore
+    public void testAuthToken(){
+        HttpClientBuilder httpClientBuilder= new HttpClientBuilder();
+        httpClientBuilder.setAuthToken("1234abc");
+        Assert.assertEquals("1234abc",httpClientBuilder.getAuthToken());
     }
 }
