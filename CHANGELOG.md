@@ -1,5 +1,18 @@
 # Change Log
 
+## [1.5.24](https://github.com/networknt/light-consumer-4j/tree/1.5.24) (2018-12-15)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.23...1.5.24)
+
+**Closed issues:**
+
+- variable clientRequest is already defined in method send [\#16](https://github.com/networknt/light-consumer-4j/issues/16)
+- Ensure "Host" header is present in all requests [\#11](https://github.com/networknt/light-consumer-4j/issues/11)
+
+**Merged pull requests:**
+
+- Ensure the host header exists [\#14](https://github.com/networknt/light-consumer-4j/pull/14) ([jiachen1120](https://github.com/jiachen1120))
+- Issue \#12-Included addAuthToken method in consumer module [\#13](https://github.com/networknt/light-consumer-4j/pull/13) ([sreenicibc](https://github.com/sreenicibc))
+
 ## [1.5.23](https://github.com/networknt/light-consumer-4j/tree/1.5.23) (2018-12-01)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.22...1.5.23)
 
