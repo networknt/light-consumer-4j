@@ -24,6 +24,9 @@ public class HttpClientRequest implements AutoCloseable {
 
     private String apiHost;
 
+    private int maxReqCount=-1;
+
+
     // Cached thread pool as we might expect many short-lived threads..
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -159,5 +162,12 @@ public class HttpClientRequest implements AutoCloseable {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
+    }
+    public int getMaxReqCount() {
+        return maxReqCount;
+    }
+
+    public void setMaxReqCount(int maxReqCount) {
+        this.maxReqCount = maxReqCount;
     }
 }

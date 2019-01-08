@@ -37,7 +37,7 @@ public class ConnectionCacheManager {
      * @param isHttp2Enabled Whether an http2 or http1 connection will be made.
      * @return A connection to the host.
      */
-    public ClientConnection getConnection(URI hostUri, long connectionTTL, TimeoutDef connectionRequestTimeout, boolean isHttp2Enabled) throws InterruptedException, ExecutionException, TimeoutException {
+    public ClientConnection getConnection(URI hostUri, long connectionTTL, TimeoutDef connectionRequestTimeout, boolean isHttp2Enabled,int requestCount) throws InterruptedException, ExecutionException, TimeoutException {
         synchronized (ConnectionCacheManager.class) {
             CacheableConnection connection = clientConnectionMap.get(hostUri.toString());
             if (connection != null && connection.isOpen()) {
@@ -45,7 +45,7 @@ public class ConnectionCacheManager {
                 return connection.getCachedConnection();
             }
             logger.debug("Creating a new connection to: " + hostUri);
-            CacheableConnection cacheableConnection = new CacheableConnection(this.connect(hostUri, connectionRequestTimeout, isHttp2Enabled), connectionTTL);
+            CacheableConnection cacheableConnection = new CacheableConnection(this.connect(hostUri, connectionRequestTimeout, isHttp2Enabled), connectionTTL,requestCount);
 
             clientConnectionMap.put(hostUri.toString(), cacheableConnection);
             return cacheableConnection.getCachedConnection();
