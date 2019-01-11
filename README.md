@@ -2,7 +2,7 @@
 
 Light Consumer 4j is module which helps for consumers to easily integrate with light-4j apis.
 It is built on top of Http2Client & java8,it has a lot of extra features like connection pooling etc.
-it supports both direct and consul configuration to call the apis.
+it supports both direct URL and service discover (Consul) to call the apis.
 ### Usage
 Add dependency in your project.
 
@@ -15,7 +15,7 @@ Add dependency in your project.
 ```
 Here are the methods available in ClientBuilder.
 
- Future <ClientResponse> send()           // Builder for issuing the request to the client.
+ Future <ClientResponse> send()           // Send request.
  
  String getServiceUrl()                   // Get the resolved serviceUrl
  
@@ -65,10 +65,11 @@ Future<ClientResponse> clientRequest = new HttpClientBuilder()
                     .setRequestTimeout(new TimeoutDef(100, TimeUnit.SECONDS))
                     .setRequestBody("")
                     .setConnectionCacheTTLms(10000)
+                    .setMaxReqCount(5)
                     .send();
             ClientResponse clientResponse = clientRequest.get();
 ```
-Call the api via Consul:
+Call the api via service discover (Consul):
 
 ```
 Future<ClientResponse> clientRequest = new HttpClientBuilder()
@@ -85,6 +86,7 @@ Future<ClientResponse> clientRequest = new HttpClientBuilder()
                     .setRequestTimeout(new TimeoutDef(100, TimeUnit.SECONDS))
                     .setRequestBody("")
                     .setConnectionCacheTTLms(10000)
+                    .setMaxReqCount(5)
                     .send();
             ClientResponse clientResponse = clientRequest.get();
 ```
