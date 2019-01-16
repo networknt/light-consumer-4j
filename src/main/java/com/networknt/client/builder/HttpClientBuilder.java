@@ -75,7 +75,7 @@ public class HttpClientBuilder {
 
         ClientConnection clientConnection = connectionCacheManager.getConnection(requestHost,
                 httpClientRequest.getConnectionCacheTTLms(), httpClientRequest.getConnectionRequestTimeout(),
-                httpClientRequest.getHttp2Enabled());
+                httpClientRequest.getHttp2Enabled(),httpClientRequest.getMaxReqCount());
 
         // Send the request
         clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(httpClientRequest.getResponseReference()));
@@ -204,6 +204,10 @@ public class HttpClientBuilder {
 
     public HttpClientBuilder setHeaderValue(HttpString headerName, String headerValue) {
         this.httpClientRequest.setHeaderValue(headerName, headerValue);
+        return this;
+    }
+    public HttpClientBuilder setMaxReqCount(int maxReqCount) {
+        this.httpClientRequest.setMaxReqCount(maxReqCount);
         return this;
     }
 }
