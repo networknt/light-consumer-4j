@@ -11,21 +11,26 @@ public class CacheableConnection {
     private ClientConnection clientConnection;
     private long ttl;
     private long lifeStartTime;
+    private int maxReqCount=-1;
+    private int requestCount;
 
-    public CacheableConnection(ClientConnection clientConnection, long ttl) {
+    public CacheableConnection(ClientConnection clientConnection, long ttl, int maxReqCount) {
         this.clientConnection = clientConnection;
         this.ttl = ttl;
         this.lifeStartTime = System.currentTimeMillis();
+        this.maxReqCount= maxReqCount;
     }
 
     public boolean isOpen() {
-        if(System.currentTimeMillis() > this.lifeStartTime + ttl) {
+        if(System.currentTimeMillis() > this.lifeStartTime + ttl||(requestCount>=maxReqCount && maxReqCount!=-1)) {
             logger.debug("Connection expired.");
             try {
                 this.clientConnection.close();
+                requestCount=0;
             } catch (Exception ignored){ }
             return false;
         }
+        ++requestCount;
         return this.clientConnection.isOpen();
     }
 
@@ -33,3 +38,4 @@ public class CacheableConnection {
         return this.clientConnection;
     }
 }
+
