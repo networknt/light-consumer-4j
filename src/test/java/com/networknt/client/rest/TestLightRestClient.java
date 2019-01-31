@@ -37,6 +37,19 @@ public class TestLightRestClient {
     public static void setUp() {
         lightRestClient = new LightRestClient();
     }
+    
+    @Test
+    public void testStr() {
+    	String s1="";
+    	String s2=",";
+    	String s3=",,";
+    	
+    	String[] t1 = s1.split(",");
+    	String[] t2 = s2.split(",");
+    	String[] t3 = s3.split(",");
+    	
+    	System.out.println();
+    }
 
     @Test @Ignore
     public void testGetMethod() throws RestClientException, Exception {

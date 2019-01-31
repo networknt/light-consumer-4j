@@ -1,29 +1,31 @@
 package com.networknt.client;
 
+import static com.networknt.client.oauth.OauthHelper.encodeCredentials;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xnio.IoUtils;
+import org.xnio.OptionMap;
+
 import com.networknt.client.oauth.TokenResponse;
 import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;
 import com.networknt.exception.ClientException;
 import com.networknt.service.SingletonServiceFactory;
+
 import io.undertow.UndertowOptions;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import io.undertow.util.Headers;
 import io.undertow.util.Methods;
-import org.xnio.IoUtils;
-import org.xnio.OptionMap;
-
-import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.networknt.client.oauth.OauthHelper.encodeCredentials;
 
 /**
  * This is a stand along java client application that is used to demo how to
@@ -33,6 +35,8 @@ import static com.networknt.client.oauth.OauthHelper.encodeCredentials;
  * @author Steve Hu
  */
 public class Http2ClientExample {
+	private static final Logger logger = LoggerFactory.getLogger(Http2ClientExample.class);
+	
     // This should be coming from a config file for your app and set it true if OAuth 2.0
     // provider services are available and configured in client.yml and secret.yml
     static final boolean securityEnabled = false;
@@ -46,14 +50,14 @@ public class Http2ClientExample {
     long expiration;
 
     public static void main(String[] args) throws Exception {
-        apiHost = cluster.serviceToUrl("https", "io.swagger.swagger-light-java-1.0.0", null, null);
-        reusedConnection = client.connect(new URI(apiHost), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL, OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
+//        apiHost = cluster.serviceToUrl("https", "io.swagger.swagger-light-java-1.0.0", null, null);
+//        reusedConnection = client.connect(new URI(apiHost), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL, OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
         Http2ClientExample e = new Http2ClientExample();
         e.testHttp2Get();
-        e.testHttp2Post();
-        e.testHttp2GetReuse();
-        e.testHttp2PostResue();
-        System.exit(0);
+//        e.testHttp2Post();
+//        e.testHttp2GetReuse();
+//        e.testHttp2PostResue();
+        //System.exit(0);
     }
 
     /**
@@ -64,14 +68,31 @@ public class Http2ClientExample {
      * @throws Exception Exception
      */
     public void testHttp2Get() throws Exception {
+    	try {
+        // Create an HTTP 2.0 connection to the server
+        final ClientConnection connection = client.connect(new URI("https://127.0.0.1:6883"), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL, OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
+  
+        getData(connection);
+        
+    	} catch (Throwable t) {
+    		logger.error(t.getMessage(), t);
+    	}
+    }
+    
+    public void getData(ClientConnection connection) {
+    	
+    	if (!connection.isOpen()) {
+    		logger.error("connection is not open..........");
+    		return;
+    	}
+    	
         // Create one CountDownLatch that will be reset in the callback function
         final CountDownLatch latch = new CountDownLatch(1);
-        // Create an HTTP 2.0 connection to the server
-        final ClientConnection connection = client.connect(new URI("https://localhost:8443"), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL, OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
+        
         // Create an AtomicReference object to receive ClientResponse from callback function
         final AtomicReference<ClientResponse> reference = new AtomicReference<>();
         try {
-            final ClientRequest request = new ClientRequest().setMethod(Methods.GET).setPath("/get");
+            final ClientRequest request = new ClientRequest().setMethod(Methods.GET).setPath("/oauth2/service?page=1");
             // this is to ask client module to pass through correlationId and traceabilityId as well as
             // getting access token from oauth2 server automatically and attatch authorization headers.
             if(securityEnabled) {
@@ -88,16 +109,32 @@ public class Http2ClientExample {
             }
             // send request to server with a callback function provided by Http2Client
             connection.sendRequest(request, client.createClientCallback(reference, latch));
+            
+            logger.debug("waiting for response ...............");
+            
             // wait for 100 millisecond to timeout the request.
-            latch.await(100, TimeUnit.MILLISECONDS);
+            latch.await(1000, TimeUnit.MILLISECONDS);
+            
+            logger.debug("after waiting ...............");
+        }catch(Throwable t) {
+        	logger.debug("error caught ...............");
+        	
+        	logger.error(t.getMessage(), t);
         } finally {
             // here the connection is closed after one request. It should be used for in frequent
             // request as creating a new connection is costly with TLS handshake and ALPN.
-            IoUtils.safeClose(connection);
+        	if (null!=connection && connection.isOpen())
+        		IoUtils.safeClose(connection);
         }
-        int statusCode = reference.get().getResponseCode();
-        String body = reference.get().getAttachment(Http2Client.RESPONSE_BODY);
-        System.out.println("testHttp2Get: statusCode = " + statusCode + " body = " + body);
+        ClientResponse res = reference.get();
+        
+        if (null!=res) {
+            int statusCode = res.getResponseCode();
+            String body = res.getAttachment(Http2Client.RESPONSE_BODY);
+            System.out.println("testHttp2Get: statusCode = " + statusCode + " body = " + body);       	
+        }else {
+        	System.out.println("no response");
+        }
     }
 
     /**
@@ -122,7 +159,8 @@ public class Http2ClientExample {
             connection.sendRequest(request, client.createClientCallback(reference, latch, "post"));
             latch.await(100, TimeUnit.MILLISECONDS);
         } finally {
-            IoUtils.safeClose(connection);
+        	if (null!=connection && connection.isOpen())
+        		IoUtils.safeClose(connection);
         }
         System.out.println("testHttp2Post: statusCode = " + reference.get().getResponseCode() + " body = " + reference.get().getAttachment(Http2Client.RESPONSE_BODY));
     }
