@@ -199,3 +199,5 @@ Call the api with direct URL:
 
 
   ```
+
+  ### TODO ParallelRestClient
