@@ -11,6 +11,7 @@ public interface RestClient {
     /**
      * Retrieve a representation by doing a GET on the specified URL.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
@@ -21,6 +22,7 @@ public interface RestClient {
     /**
      * Retrieve a representation by doing a GET on the specified URL.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param serviceDef the URL service definition
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
@@ -35,7 +37,7 @@ public interface RestClient {
      * @param path the path of the service call, for example: /v1/hello
      * @return the JSON format object
      */
-    <T> T get(String url, String path) throws RestClientException;
+    String get(String url, String path) throws RestClientException;
 
     /**
      * Retrieve a representation by doing a GET on the specified URL.
@@ -44,10 +46,11 @@ public interface RestClient {
      * @param path the path of the service call, for example: /v1/hello
      * @return the JSON format object
      */
-    <T> T get(ServiceDef serviceDef, String path) throws RestClientException;
+    String get(ServiceDef serviceDef, String path) throws RestClientException;
     /**
      * Retrieve a representation by doing a GET on the URI template.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param url the URL
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
@@ -59,6 +62,7 @@ public interface RestClient {
     /**
      * Retrieve a representation by doing a POST on the specified URL.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
@@ -70,6 +74,7 @@ public interface RestClient {
     /**
      * Retrieve a representation by doing a POST on the specified URL.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param serviceDef the URL service definition
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
@@ -85,7 +90,7 @@ public interface RestClient {
      * @param requestBody REQUEST BODY
      * @return the JSON format object
      */
-    <T> T post(String url, String path,  String requestBody) throws RestClientException;
+    String post(String url, String path,  String requestBody) throws RestClientException;
 
     /**
      * Retrieve a representation by doing a POST on the specified URL.
@@ -95,10 +100,11 @@ public interface RestClient {
      * @param requestBody REQUEST BODY
      * @return the JSON format object
      */
-    <T> T post(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException;
+    String post(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException;
     /**
      * Retrieve a representation by doing a POST on the URI template.
      * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
      * @param url the URL
      * @param path the path of the service call, for example: /v1/hello
      * @param responseType the type of the return value
