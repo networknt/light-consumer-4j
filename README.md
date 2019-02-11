@@ -3,6 +3,8 @@
 Light Consumer 4j is module which helps for consumers to easily integrate with light-4j apis.
 It is built on top of Http2Client & java8,it has a lot of extra features like connection pooling etc.
 it supports both direct URL and service discover (Consul) to call the apis.
+
+
 ### Usage
 Add dependency in your project.
 
@@ -10,9 +12,50 @@ Add dependency in your project.
 <dependency>
     <groupId>com.networknt</groupId>
     <artifactId>light-consumer-4j</artifactId>
-    <version>1.5.26</version>
+    <version>1.5.29</version>
 </dependency>
 ```
+
+### Configuration
+
+Setup the client and registry on the service.yml config file (or on centralized config file values.yml).
+
+For example, if you are using consul client &  registry:
+
+
+```yaml
+
+- com.networknt.registry.URL:
+  - com.networknt.registry.URLImpl:
+      parameters:
+        registryRetryPeriod: '30000'
+- com.networknt.consul.client.ConsulClient:
+  - com.networknt.consul.client.ConsulClientImpl
+- com.networknt.registry.Registry:
+  - com.networknt.consul.ConsulRegistry
+- com.networknt.balance.LoadBalance:
+  - com.networknt.balance.RoundRobinLoadBalance
+- com.networknt.cluster.Cluster:
+  - com.networknt.cluster.LightCluster
+
+
+```
+
+There is a config file for light-consumer-4j library which used to set service environment tag.
+
+-- consumer.yml
+
+Environment tag that will be registered on consul to support multiple instances per env for testing.
+
+This config file (consumer.yml) is optional. If user doesn't set this file (or the values on the values.yml), system will use default value (null) for service environment tag
+
+
+
+### Implementation detail:
+
+
+####  ClientBuilder
+
 Here are the methods available in ClientBuilder.
 
  Future <ClientResponse> send()           // Send request.
@@ -44,9 +87,24 @@ Here are the methods available in ClientBuilder.
  setServiceDef(ServiceDef serviceDef) // set protocol,service id , environment  and requestKey to call api via consul
 
  setMaxReqCount(int maxReqCount)          // enable connection cache by request number
+
+
+ ####  LightRestClient
+
+  LightRestClient provide general Restful method call by user provided URL or service Id.
+
+  -- Get
+
+  -- POST
+
+  -- PUT
+
+  --DELETE
+
+
+ ### Example service call:
  
- 
- #### Here is the code example to call the api.
+ #### Code example to call the api by using HttpClientBuilder.
  
 Call the api with direct URL:
 
@@ -69,6 +127,8 @@ Future<ClientResponse> clientRequest = new HttpClientBuilder()
                     .send();
             ClientResponse clientResponse = clientRequest.get();
 ```
+
+
 Call the api via service discover (Consul):
 
 ```
@@ -90,3 +150,52 @@ Future<ClientResponse> clientRequest = new HttpClientBuilder()
                     .send();
             ClientResponse clientResponse = clientRequest.get();
 ```
+
+
+
+ #### Code example to call the api by using LightRestClient.
+
+
+Call the api with direct URL:
+
+```
+        LightRestClient lightRestClient = new LightRestClient();
+        String requestStr = "{\"selection\":{\"accessCard\":\"22222222\",\"selectID\":10009,\"crossReference\":{\"externalSystemID\":226,\"referenceType\":2,\"ID\":\"122222\"}}}";
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Content-Type", "application/json");
+        headerMap.put("Transfer-Encoding", "chunked");
+
+       Map resultMap = lightRestClient.post("https://localhost:8467", "/networknt/select/",  Map.class, headerMap, requestStr);
+
+ ```
+
+
+ Call the api with docker image name (service running by docker-compose in the docker container):
+
+ ```
+         LightRestClient lightRestClient = new LightRestClient();
+         String requestStr = "{\"selection\":{\"accessCard\":\"22222222\",\"selectID\":10009,\"crossReference\":{\"externalSystemID\":226,\"referenceType\":2,\"ID\":\"122222\"}}}";
+         Map<String, String> headerMap = new HashMap<>();
+         headerMap.put("Content-Type", "application/json");
+         headerMap.put("Transfer-Encoding", "chunked");
+
+        Map resultMap = lightRestClient.post("https://apia-service:8467", "/networknt/select/",  Map.class, headerMap, requestStr);
+
+
+  ```
+
+
+  Call the api with service discover (Consul):
+
+ ```
+        LightRestClient lightRestClient = new LightRestClient();
+        String requestStr = "{\"selection\":{\"accessCard\":\"22222222\",\"selectID\":10009,\"crossReference\":{\"externalSystemID\":226,\"referenceType\":2,\"ID\":\"122222\"}}}";
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Content-Type", "application/json");
+        headerMap.put("Transfer-Encoding", "chunked");
+
+        ServiceDef serviceDef = new ServiceDef("https", "com.networknt.apia.selection-1.00.00", null);
+        Map resultMap =  lightRestClient.post(serviceDef, "/networknt/select/", Map.class, headerMap, requestStr);
+
+
+  ```

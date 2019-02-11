@@ -84,7 +84,12 @@ public class LightRestClient implements RestClient {
 
     @Override
     public <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, String requestBody) throws RestClientException {
-        return execute(serviceDef, path, responseType, null, Methods.POST, requestBody);
+        return post(serviceDef, path, responseType, null, requestBody);
+    }
+
+    @Override
+    public <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, Map<String, ?> headerMap, String requestBody) throws RestClientException {
+        return execute(serviceDef, path, responseType, headerMap, Methods.POST, requestBody);
     }
 
     @Override
@@ -100,6 +105,11 @@ public class LightRestClient implements RestClient {
     @Override
     public String put(ServiceDef serviceDef, String path, String requestBody) throws RestClientException {
         return execute(serviceDef, path, String.class, null, Methods.PUT, requestBody);
+    }
+
+    @Override
+    public String put(ServiceDef serviceDef, String path, Map<String, ?> headerMap, String requestBody) throws RestClientException {
+        return execute(serviceDef, path, String.class, headerMap, Methods.PUT, requestBody);
     }
 
     @Override
