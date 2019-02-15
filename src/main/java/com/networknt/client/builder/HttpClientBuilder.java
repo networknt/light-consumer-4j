@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -125,12 +126,13 @@ public class HttpClientBuilder {
     }
 
     public HttpClientBuilder setServiceDef(ServiceDef serviceDef) {
+        Objects.requireNonNull(cluster);
         if (serviceDef.getEnvironment() == null) { // get env from service.yml config
             String env = config.getServiceEnv().get(serviceDef.getServiceId());
             if (env != null && env.length() > 0) {
                 serviceDef.setEnvironment(env);
             } else {
-                throw new RuntimeException("Service \"" + serviceDef.getServiceId() + "\" was not configured with an environment.");
+                logger.warn("Service \"" + serviceDef.getServiceId() + "\" was not configured with an environment.");
             }
         }
         this.httpClientRequest.setServiceDef(serviceDef);

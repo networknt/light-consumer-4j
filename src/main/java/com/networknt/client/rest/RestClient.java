@@ -84,6 +84,18 @@ public interface RestClient {
     <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, String requestBody) throws RestClientException;
     /**
      * Retrieve a representation by doing a POST on the specified URL.
+     * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param responseType the type of the return value
+     * @param headerMap the map containing header setting map
+     * @param requestBody REQUEST BODY
+     * @return the converted object
+     */
+    <T> T post(ServiceDef serviceDef, String path, Class<T> responseType, Map<String, ?> headerMap, String requestBody) throws RestClientException;
+    /**
+     * Retrieve a representation by doing a POST on the specified URL.
      * The response return with Json format string.
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
@@ -133,6 +145,17 @@ public interface RestClient {
      * @return the JSON format string
      */
     String put(ServiceDef serviceDef, String path,  String requestBody) throws RestClientException;
+
+    /**
+     * Retrieve a representation by doing a PUT on the specified URL.
+     * The response return with Json format string.
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param headerMap the map containing header setting map
+     * @param requestBody REQUEST BODY
+     * @return the JSON format string
+     */
+    String put(ServiceDef serviceDef, String path,  Map<String, ?> headerMap, String requestBody) throws RestClientException;
     /**
      * Retrieve a representation by doing a PUT on the URI template.
      * The response (if any) is converted and returned.
