@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.30](https://github.com/networknt/light-consumer-4j/tree/1.5.30) (2019-02-21)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.29...1.5.30)
+
+**Closed issues:**
+
+- Included addAuthToken method in consumer module [\#12](https://github.com/networknt/light-consumer-4j/issues/12)
+
 ## [1.5.29](https://github.com/networknt/light-consumer-4j/tree/1.5.29) (2019-02-16)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.28...1.5.29)
 
