@@ -69,12 +69,13 @@ public class TestHttpClientBuilder {
     public void testHttpClientBuilderAuthToken() throws Exception {
         ClientRequest clientRequest = new ClientRequest();
         PowerMockito.when(httpClientRequest.getClientRequest()).thenReturn(clientRequest);
+        PowerMockito.when(httpClientRequest.getAddCCToken()).thenReturn(false);
         PowerMockito.when(httpClientRequest.getAuthToken()).thenReturn("12345abc");
         HttpClientBuilder cb = new HttpClientBuilder();
         cb.send();
-        verify(httpClientRequest, times(2)).getAuthToken();
-        verify(httpClientRequest, never()).getAddCCToken();
-        Assert.assertEquals("12345abc", httpClientRequest.getAuthToken());
+        verify(http2Client, times(1)).addAuthToken(any(), eq("12345abc"));
+        verify(http2Client, never()).addCcToken(any());
+        Assert.assertEquals("12345abc", cb.getAuthToken());
     }
 
     @Test
@@ -82,11 +83,11 @@ public class TestHttpClientBuilder {
         ClientRequest clientRequest = new ClientRequest();
         PowerMockito.when(httpClientRequest.getClientRequest()).thenReturn(clientRequest);
         PowerMockito.when(httpClientRequest.getAddCCToken()).thenReturn(true);
+        PowerMockito.when(httpClientRequest.getAuthToken()).thenReturn(null);
         HttpClientBuilder cb = new HttpClientBuilder();
         cb.send();
-        verify(httpClientRequest, times(1)).getAuthToken();
-        verify(httpClientRequest, times(1)).getAddCCToken();
-        Assert.assertEquals(true, httpClientRequest.getAddCCToken());
+        verify(http2Client, never()).addAuthToken(any(), eq("12345abc"));
+        verify(http2Client, times(1)).addCcToken(any());
     }
 
     @Test
