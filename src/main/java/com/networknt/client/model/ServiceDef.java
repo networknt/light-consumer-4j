@@ -1,4 +1,4 @@
-package com.networknt.client.builder;
+package com.networknt.client.model;
 
 public class ServiceDef {
     private String protocol;

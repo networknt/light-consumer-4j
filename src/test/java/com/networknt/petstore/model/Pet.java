@@ -1,7 +1,9 @@
 
-package com.networknt.client.rest;
-import java.util.Objects;
+package com.networknt.petstore.model;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Objects;
 
 public class Pet {
 
@@ -9,15 +11,15 @@ public class Pet {
     private String name;
     
     private Long id;
-    
+
     private String tag;
-    
+
 
     public Pet () {
     }
 
-    
-    
+
+
     @JsonProperty("name")
     public String getName() {
         return name;
@@ -26,9 +28,9 @@ public class Pet {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
+
+
+
     @JsonProperty("id")
     public Long getId() {
         return id;

@@ -1,5 +1,7 @@
 package com.networknt.client.builder;
 
+import com.networknt.client.model.ServiceDef;
+import com.networknt.client.model.TimeoutDef;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import io.undertow.util.HttpString;

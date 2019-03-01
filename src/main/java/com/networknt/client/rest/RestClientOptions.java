@@ -1,6 +1,6 @@
 package com.networknt.client.rest;
 
-import com.networknt.client.builder.TimeoutDef;
+import com.networknt.client.model.TimeoutDef;
 import org.xnio.Option;
 
 /**

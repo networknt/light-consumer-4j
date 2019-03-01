@@ -1,11 +1,10 @@
 package com.networknt.client.builder;
 
-import com.networknt.balance.LoadBalance;
 import com.networknt.client.Http2Client;
+import com.networknt.client.model.ServiceDef;
 import com.networknt.exception.ApiException;
 import com.networknt.exception.ClientException;
 import com.networknt.registry.Registry;
-import com.networknt.registry.URL;
 import com.networknt.registry.URLImpl;
 import com.networknt.service.SingletonServiceFactory;
 import io.undertow.client.ClientRequest;

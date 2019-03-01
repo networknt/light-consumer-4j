@@ -1,5 +1,6 @@
 package com.networknt.client.builder;
 
+import com.networknt.client.model.TimeoutDef;
 import io.undertow.UndertowOptions;
 import io.undertow.client.ClientConnection;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class ConnectionCacheManager {
      * @param isHttp2Enabled Whether an http2 or http1 connection will be made.
      * @return A connection to the host.
      */
-    public ClientConnection getConnection(URI hostUri, long connectionTTL, TimeoutDef connectionRequestTimeout, boolean isHttp2Enabled,int requestCount) throws InterruptedException, ExecutionException, TimeoutException {
+    public ClientConnection getConnection(URI hostUri, long connectionTTL, TimeoutDef connectionRequestTimeout, boolean isHttp2Enabled, int requestCount) throws InterruptedException, ExecutionException, TimeoutException {
         synchronized (ConnectionCacheManager.class) {
             CacheableConnection connection = clientConnectionMap.get(hostUri.toString());
             if (connection != null && connection.isOpen()) {

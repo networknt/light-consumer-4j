@@ -2,7 +2,7 @@ package com.networknt.client.rest;
 
 import com.networknt.client.Http2Client;
 import com.networknt.client.builder.HttpClientBuilder;
-import com.networknt.client.builder.ServiceDef;
+import com.networknt.client.model.ServiceDef;
 import com.networknt.config.Config;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;

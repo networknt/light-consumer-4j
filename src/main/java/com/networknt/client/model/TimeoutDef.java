@@ -1,4 +1,4 @@
-package com.networknt.client.builder;
+package com.networknt.client.model;
 
 import java.util.concurrent.TimeUnit;
 
