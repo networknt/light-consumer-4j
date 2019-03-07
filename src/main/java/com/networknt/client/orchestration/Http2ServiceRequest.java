@@ -205,4 +205,8 @@ public class Http2ServiceRequest {
             clientRequest.getRequestHeaders().put(Headers.HOST, hostHeader);
         }
     }
+
+    public ClientRequest getClientRequest() {
+        return clientRequest;
+    }
 }

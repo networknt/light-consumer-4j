@@ -20,7 +20,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.networknt</groupId>
     <artifactId>light-consumer-4j</artifactId>
-
     <version>1.5.32</version>
     <packaging>jar</packaging>
     <name>Parent POM</name>
@@ -224,6 +223,12 @@
             <groupId>com.networknt</groupId>
             <artifactId>openapi-validator</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.10.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
