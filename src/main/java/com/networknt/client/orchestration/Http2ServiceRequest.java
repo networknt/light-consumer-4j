@@ -1,14 +1,19 @@
 package com.networknt.client.orchestration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.client.model.HttpVerb;
+import com.networknt.client.model.ServiceDef;
+import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;
+import com.networknt.service.SingletonServiceFactory;
 import io.undertow.client.ClientRequest;
 import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
-import io.undertow.util.Methods;
-
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -16,40 +21,12 @@ import java.util.function.Predicate;
 
 public class Http2ServiceRequest {
 
-    public enum HttpVerb {
-        GET(Methods.GET),
-        POST(Methods.POST),
-        PUT(Methods.PUT),
-        DELETE(Methods.DELETE),
-        HEAD(Methods.HEAD),
-        OPTIONS(Methods.OPTIONS),
-        TRACE(Methods.TRACE),
-        PATCH(Methods.PATCH),
-        CONNECT(Methods.CONNECT);
-
-        public final HttpString verbHttpString;
-
-        HttpVerb(HttpString verb) {
-            this.verbHttpString = verb;
-        }
-    }
-
-    public enum CommonHttpHeader {
-        ACCEPT(Headers.ACCEPT, "application/json");
-
-        final HttpString headerName;
-        final String headerValue;
-
-        CommonHttpHeader(HttpString headerName, String headerValue) {
-            this.headerName = headerName;
-            this.headerValue = headerValue;
-        }
-    }
-
-    final URI hostURI;
-    Optional<String> requestBody = Optional.empty();
-
-    final ClientRequest clientRequest;
+    private static Cluster cluster = SingletonServiceFactory.getBean(Cluster.class);
+    private final URI hostURI;
+    private Optional<String> requestBody = Optional.empty();
+    private Boolean addCCToken = false;
+    private String authToken;
+    private final ClientRequest clientRequest;
 
     Http2Client http2Client = Http2Client.INSTANCE;
     ObjectMapper objectMapper = Config.getInstance().getMapper();
@@ -66,31 +43,20 @@ public class Http2ServiceRequest {
         this.clientRequest = new ClientRequest().setMethod(verb.verbHttpString).setPath(path);
     }
 
-    public void addRequestHeader(CommonHttpHeader header) {
-        this.clientRequest.getRequestHeaders().add(header.headerName, header.headerValue);
+    public Http2ServiceRequest(ServiceDef serviceDef, String path, HttpVerb verb) throws URISyntaxException {
+        Objects.requireNonNull(cluster);
+        this.hostURI = new URI(cluster.serviceToUrl(serviceDef.getProtocol(), serviceDef.getServiceId(), serviceDef.getEnvironment(), serviceDef.getRequestKey()));
+        this.clientRequest = new ClientRequest().setMethod(verb.verbHttpString).setPath(path);
     }
 
-    public void addRequestHeader(String headerName, String headerValue) {
-        this.clientRequest.getRequestHeaders().put(new HttpString(headerName), headerValue);
-    }
 
-    public void addRequestHeader(String headerName, int headerValue) {
-        this.clientRequest.getRequestHeaders().put(new HttpString(headerName), headerValue);
-    }
-
-    public void setRequestBody(String requestBody) {
-        this.requestBody = Optional.ofNullable(requestBody);
-    }
-
-    public void setRequestBody(Object requestBody) throws Exception {
-        this.requestBody = Optional.ofNullable(this.objectMapper.writeValueAsString(requestBody));
-    }
 
     public void setIsStatusCodeValid(Predicate<Integer> isStatusCodeValid) {
         this.isStatusCodeValid = Optional.of(isStatusCodeValid);
     }
 
     public CompletableFuture<Http2ServiceResponse> call() {
+        processClientRequest();
         return http2Client.callService(hostURI, clientRequest, requestBody).thenApplyAsync(
                 response -> new Http2ServiceResponse(response));
     }
@@ -179,4 +145,64 @@ public class Http2ServiceRequest {
         }
     }
 
+
+    public Http2ServiceRequest setRequestBody(Object requestBody) throws Exception {
+        this.requestBody = Optional.ofNullable(this.objectMapper.writeValueAsString(requestBody));
+        return this;
+    }
+
+
+    public Http2ServiceRequest setRequestBody(String requestBody) {
+        if (requestBody!=null)  this.requestBody = Optional.ofNullable(requestBody);
+        return this;
+    }
+
+    public Http2ServiceRequest setRequestHeaders( Map<String, ?> headerMap) {
+        if (headerMap!=null) {
+            headerMap.forEach((k,v)->this.clientRequest.getRequestHeaders().add(new HttpString(k), v.toString()));
+        }
+        return this;
+    }
+
+    public Http2ServiceRequest addRequestHeader(String headerName, String headerValue) {
+        this.clientRequest.getRequestHeaders().put(new HttpString(headerName), headerValue);
+        return this;
+    }
+
+    public Http2ServiceRequest addRequestHeader(String headerName, int headerValue) {
+        this.clientRequest.getRequestHeaders().put(new HttpString(headerName), headerValue);
+        return this;
+    }
+
+    public Http2ServiceRequest addCCToken() {
+        this.addCCToken = true;
+        return this;
+    }
+    public Http2ServiceRequest setAuthToken(String authToken) {
+        this.authToken = authToken;
+        return this;
+    }
+    public String getAuthToken() {
+        return this.authToken;
+    }
+
+    private void processClientRequest() {
+        if (authToken!=null&&!authToken.isEmpty()) {
+            //TODO integrate the client module httpsClient
+           // http2Client.addAuthToken(clientRequest, authToken);
+        } else {
+            if (addCCToken) {
+                //TODO integrate the client module httpsClient
+            //    http2Client.addCcToken(clientRequest);
+            }
+        }
+
+
+        // Ensure host header exists
+        if (this.clientRequest.getRequestHeaders().get(Headers.HOST) == null ||
+                this.clientRequest.getRequestHeaders().get(Headers.HOST).equals("")) {
+            String hostHeader = this.hostURI.getHost();
+            clientRequest.getRequestHeaders().put(Headers.HOST, hostHeader);
+        }
+    }
 }
