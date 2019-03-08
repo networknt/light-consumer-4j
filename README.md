@@ -1,5 +1,11 @@
 # Light Consumer 4j
 
+[Stack Overflow](https://stackoverflow.com/questions/tagged/light-4j) |
+[Google Group](https://groups.google.com/forum/#!forum/light-4j) |
+[Gitter Chat](https://gitter.im/networknt/light-4j) |
+[Documentation](https://doc.networknt.com/consumer/light-consumer-4j/) |
+[Contribution Guide](https://doc.networknt.com/contribute/development/) |
+
 Light Consumer 4j is module which helps for consumers to easily integrate with light-4j apis.
 It is built on top of Http2Client & java8,it has a lot of extra features like connection pooling etc.
 it supports both direct URL and service discover (Consul) to call the apis.
