@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.6.0](https://github.com/networknt/light-consumer-4j/tree/1.6.0) (2019-04-05)
+
+
+**Merged pull requests:**
+
+
+- fixes \#26 disable test cases in TestHttpClientBuilder [\#28](https://github.com/networknt/light-consumer-4j/pull/28) ([stevehu](https://github.com/stevehu))
 ## [1.5.32](https://github.com/networknt/light-consumer-4j/tree/1.5.32) (2019-03-20)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.31...1.5.32)
 
