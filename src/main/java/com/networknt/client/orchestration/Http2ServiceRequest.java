@@ -1,6 +1,7 @@
 package com.networknt.client.orchestration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.client.Http2Client;
 import com.networknt.client.model.HttpVerb;
 import com.networknt.client.model.ServiceDef;
 import com.networknt.cluster.Cluster;
@@ -28,7 +29,7 @@ public class Http2ServiceRequest {
     private String authToken;
     private final ClientRequest clientRequest;
 
-    Http2Client http2Client = Http2Client.INSTANCE;
+    Http2Client http2Client =Http2Client.getInstance();
     ObjectMapper objectMapper = Config.getInstance().getMapper();
 
     Optional<Predicate<Integer>> isStatusCodeValid = Optional.empty();

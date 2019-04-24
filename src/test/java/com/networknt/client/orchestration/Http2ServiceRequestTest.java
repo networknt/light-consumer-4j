@@ -1,5 +1,6 @@
 package com.networknt.client.orchestration;
 
+import com.networknt.client.Http2Client;
 import com.networknt.client.model.HttpVerb;
 import io.undertow.client.ClientResponse;
 import org.junit.Before;

@@ -36,12 +36,12 @@ public class RequestStressTest {
 
     @Before
     public void setUp() throws Exception{
-        IntStream.rangeClosed(1, 999).forEach(id->requestList.add(new Http2ServiceRequest(
+        IntStream.rangeClosed(1, 99).forEach(id->requestList.add(new Http2ServiceRequest(
                 this.uri, "/v1/pets/"+id,
                 HttpVerb.GET)));
     }
 
-    @Test @Ignore
+    @Test
     public void loadTestRequests() {
         Instant start = Instant.now();
         List<CompletableFuture<Pet>> completableFutureList = requestList.parallelStream()
