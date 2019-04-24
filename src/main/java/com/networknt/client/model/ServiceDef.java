@@ -1,3 +1,4 @@
+package com.networknt.client.model;
 /*
  * Copyright (c) 2016 Network New Technologies Inc.
  *
@@ -14,7 +15,6 @@
  * limitations under the License.
  */
 
-package com.networknt.client.builder;
 
 public class ServiceDef {
     private String protocol;

@@ -3,7 +3,7 @@
   ~ Copyright (c) 2016 Network New Technologies Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
+  ~ You may not use this file except in compliance with the License.
   ~ You may obtain a copy of the License at
   ~
   ~      http://www.apache.org/licenses/LICENSE-2.0
@@ -64,6 +64,7 @@
         </repository>
     </distributionManagement>
 
+
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -71,8 +72,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <versions.maven-version>2.4</versions.maven-version>
         <version.logback>1.2.3</version.logback>
-    </properties>
 
+        <version.openapi-parser>1.6.1-SNAPSHOT</version.openapi-parser>
+        <version.jackson>2.9.8</version.jackson>
+        <version.slf4j>1.7.25</version.slf4j>
+        <version.jose4j>0.6.3</version.jose4j>
+        <version.junit>4.12</version.junit>
+        <version.undertow>2.0.16.Final</version.undertow>
+        <version.json-schema-validator>1.0.3</version.json-schema-validator>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -95,6 +103,20 @@
             <artifactId>cluster</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>sanitizer</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>health</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>registry</artifactId>
@@ -103,6 +125,11 @@
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>consul</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>server</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -117,14 +144,102 @@
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
+            <artifactId>openapi-meta</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${version.json-schema-validator}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>traceability</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>correlation</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>metrics</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>openapi-parser</artifactId>
+            <version>${version.openapi-parser}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>openapi-meta</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>openapi-security</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>openapi-validator</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.10.0</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.7.4</version>
+            <version>2.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

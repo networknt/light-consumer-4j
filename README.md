@@ -208,4 +208,29 @@ Call the api with direct URL:
 
   ```
 
-  ### TODO ParallelRestClient
+
+
+ ### ParallelRestClient
+
+ Use java 8 CompletableFuture to handle two or more threads asynchronous computation; We can send requests parallel and process result asynchronously.
+
+ It can better system performance (coroutines, no threads):
+
+ 	-- More responsiveness (no blocking on threads)
+
+ 	-- More throughput (only bound by CPU)
+
+ #### Code example use ParallelRestClient call
+
+ ServiceDef serviceDef = new ServiceDef(“”https, “com.networknt.petstore1”, null, null);
+
+ Http2ServiceRequest request1 = Http2ServiceRequest(serviceDef, “/get”, HttpVerb.valueOf(“GET”);
+ Http2ServiceRequest request2 = Http2ServiceRequest(serviceDef, “/getById/1” “GET”);
+
+ Collection<CompletableFuture<?>> completableFutures = new HashSet<>();
+ CompletableFuture<Map> futureResponse1 = request1.callForTypedObject(Map.class);
+ CompletableFuture<Map> futureResponse2 = request2.callForTypedObject(Map.class);
+
+ completableFutures.add(futureResponse1);
+ completableFutures.add(futureResponse2);
+ CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0])).join();

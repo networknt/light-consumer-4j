@@ -22,15 +22,14 @@ import com.networknt.client.Http2Client;
 import com.networknt.client.builder.HttpClientBuilder;
 import com.networknt.config.Config;
 import com.networknt.exception.ClientException;
+import com.networknt.petstore.handler.TestServer;
+import com.networknt.petstore.model.Pet;
 import io.undertow.UndertowOptions;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientRequest;
 import io.undertow.client.ClientResponse;
 import io.undertow.util.Methods;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xnio.IoUtils;
@@ -45,7 +44,13 @@ import static org.junit.Assert.assertTrue;
 
 public class TestLightRestClient {
 
-
+    @ClassRule
+    public static TestServer server = TestServer.getInstance();
+    static final boolean enableHttp2 = server.getServerConfig().isEnableHttp2();
+    static final boolean enableHttps = server.getServerConfig().isEnableHttps();
+    static final int httpPort = server.getServerConfig().getHttpPort();
+    static final int httpsPort = server.getServerConfig().getHttpsPort();
+    static final String url = enableHttp2 || enableHttps ? "https://localhost:" + httpsPort : "http://localhost:" + httpPort;
 
     private static LightRestClient lightRestClient;
     static final Logger logger = LoggerFactory.getLogger(TestLightRestClient.class);
@@ -54,14 +59,14 @@ public class TestLightRestClient {
         lightRestClient = new LightRestClient();
     }
 
-    @Test @Ignore
+    @Test
     public void testGetMethod() throws RestClientException, Exception {
 
         final Http2Client client = Http2Client.getInstance();
         final CountDownLatch latch = new CountDownLatch(1);
         final ClientConnection connection;
         try {
-            connection = client.connect(new URI("https://localhost:8443"), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL,  OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
+            connection = client.connect(new URI(url), Http2Client.WORKER, Http2Client.SSL, Http2Client.BUFFER_POOL,  OptionMap.create(UndertowOptions.ENABLE_HTTP2, true)).get();
         } catch (Exception e) {
             throw new ClientException(e);
         }
@@ -86,33 +91,33 @@ public class TestLightRestClient {
     }
 
 
-    @Test @Ignore
+    @Test
     public void testGet() throws RestClientException, Exception {
-        String str = lightRestClient.get("https://localhost:8443", "/v1/pets/1", String.class);
+        String str = lightRestClient.get(url, "/v1/pets/1", String.class);
 
         System.out.println(str);
         assertNotNull(str);
     }
 
-    @Test @Ignore
+    @Test
     public void testGetWithType() throws RestClientException, Exception {
-        Pet pet = lightRestClient.get("https://localhost:8443", "/v1/pets/1", Pet.class);
+        Pet pet = lightRestClient.get(url, "/v1/pets/1", Pet.class);
         assertTrue(pet.getId()==1);
     }
 
 
-    @Test @Ignore
+    @Test
     public void testPost() throws RestClientException, JsonProcessingException {
         Pet pet = new Pet();
         pet.setId(1L);
         pet.setName("cat");
         pet.setTag("tag1");
         String requestBody = Config.getInstance().getMapper().writeValueAsString(pet);
-        String str = lightRestClient.post("https://localhost:8443", "/v1/pets", requestBody);
+        String str = lightRestClient.post(url, "/v1/pets", requestBody);
         assertNotNull(str);
     }
 
-    @Test@Ignore
+    @Test
     public void testAuthToken(){
         HttpClientBuilder httpClientBuilder= new HttpClientBuilder();
         httpClientBuilder.setAuthToken("1234abc");

@@ -18,6 +18,8 @@ package com.networknt.client.builder;
 
 import com.networknt.client.Http2Client;
 import com.networknt.client.model.ConsumerConfig;
+import com.networknt.client.model.ServiceDef;
+import com.networknt.client.model.TimeoutDef;
 import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;
 import com.networknt.exception.ApiException;

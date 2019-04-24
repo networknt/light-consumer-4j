@@ -16,7 +16,7 @@
 
 package com.networknt.client.rest;
 
-import com.networknt.client.builder.ServiceDef;
+import com.networknt.client.model.ServiceDef;
 
 import java.util.Map;
 
