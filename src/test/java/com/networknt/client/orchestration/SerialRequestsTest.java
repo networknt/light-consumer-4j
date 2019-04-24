@@ -5,10 +5,7 @@ import com.networknt.client.model.HttpVerb;
 import com.networknt.petstore.handler.TestServer;
 import com.networknt.petstore.model.Pet;
 import com.networknt.petstore.model.Tag;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +71,7 @@ public class SerialRequestsTest {
                 HttpVerb.GET).callForTypedObject(Pet.class));
 
         CompletableFuture<Tag> tagCompletableFuture = petCompletableFuture.thenComposeAsync(pet -> new Http2ServiceRequest(
-                this.uri, "/v1/tags/1" + pet.getTag(),
+                this.uri, "/v1/pets/1" + pet.getTag(),
                 HttpVerb.GET).callForTypedObject(Tag.class));
 
         try {

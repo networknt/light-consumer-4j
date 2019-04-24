@@ -1,5 +1,32 @@
 # Change Log
 
+## [1.6.0](https://github.com/networknt/light-consumer-4j/tree/1.6.0) (2019-04-05)
+
+
+**Merged pull requests:**
+
+
+- fixes \#26 disable test cases in TestHttpClientBuilder [\#28](https://github.com/networknt/light-consumer-4j/pull/28) ([stevehu](https://github.com/stevehu))
+## [1.5.32](https://github.com/networknt/light-consumer-4j/tree/1.5.32) (2019-03-20)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.31...1.5.32)
+
+**Implemented enhancements:**
+
+- Documentation for light-consumer-4j [\#15](https://github.com/networknt/light-consumer-4j/issues/15)
+
+**Closed issues:**
+
+- Update README.md to add support links to the header [\#24](https://github.com/networknt/light-consumer-4j/issues/24)
+- Unit test cases created for HttpClientBuilder using power mockito [\#22](https://github.com/networknt/light-consumer-4j/issues/22)
+
+**Merged pull requests:**
+
+- fixes \#24 Update README.md to add support links to the header [\#25](https://github.com/networknt/light-consumer-4j/pull/25) ([stevehu](https://github.com/stevehu))
+- \#22, Unit test cases created for HttpClientBuilder using power mo… [\#23](https://github.com/networknt/light-consumer-4j/pull/23) ([sreenicibc](https://github.com/sreenicibc))
+
+## [1.5.31](https://github.com/networknt/light-consumer-4j/tree/1.5.31) (2019-02-21)
+[Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.30...1.5.31)
+
 ## [1.5.30](https://github.com/networknt/light-consumer-4j/tree/1.5.30) (2019-02-21)
 [Full Changelog](https://github.com/networknt/light-consumer-4j/compare/1.5.29...1.5.30)
 
