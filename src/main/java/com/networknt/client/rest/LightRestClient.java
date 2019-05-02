@@ -69,6 +69,11 @@ public class LightRestClient implements RestClient {
     }
 
     @Override
+    public <T> T get(ServiceDef serviceDef, String path, Class<T> responseType, Map<String, ?> headerMap) throws RestClientException {
+        return execute(serviceDef, path, responseType, headerMap, Methods.GET, null);
+    }
+
+    @Override
     public String get(ServiceDef serviceDef, String path) throws RestClientException {
         return get(serviceDef, path, String.class);
     }
