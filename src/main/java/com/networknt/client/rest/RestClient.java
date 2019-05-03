@@ -48,6 +48,18 @@ public interface RestClient {
 
     /**
      * Retrieve a representation by doing a GET on the specified URL.
+     * The response (if any) is converted and returned.
+     * Use responseType as ClientResponse.class to get back the full response object
+     * @param serviceDef the URL service definition
+     * @param path the path of the service call, for example: /v1/hello
+     * @param responseType the type of the return value
+     * @param headerMap the map containing header setting map
+     * @return the converted object
+     */
+    <T> T get(ServiceDef serviceDef, String path, Class<T> responseType, Map<String, ?> headerMap) throws RestClientException;
+
+    /**
+     * Retrieve a representation by doing a GET on the specified URL.
      * The response return with Json format string.
      * @param url the URL example: https://localhost:8443 ;  https://"com.networknt.hello-1
      * @param path the path of the service call, for example: /v1/hello
