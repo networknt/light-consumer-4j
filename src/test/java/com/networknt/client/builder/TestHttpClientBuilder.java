@@ -2,10 +2,6 @@ package com.networknt.client.builder;
 
 import com.networknt.client.Http2Client;
 import com.networknt.client.model.ServiceDef;
-import com.networknt.exception.ApiException;
-import com.networknt.exception.ClientException;
-import com.networknt.registry.Registry;
-import com.networknt.registry.URLImpl;
 import com.networknt.client.model.ConsumerConfig;
 import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;

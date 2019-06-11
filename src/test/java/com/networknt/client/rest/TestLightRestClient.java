@@ -21,9 +21,9 @@ import com.networknt.client.Http2Client;
 
 import com.networknt.client.builder.HttpClientBuilder;
 import com.networknt.config.Config;
-import com.networknt.exception.ClientException;
 import com.networknt.petstore.handler.TestServer;
 import com.networknt.petstore.model.Pet;
+import com.networknt.status.exception.ClientException;
 import io.undertow.UndertowOptions;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientRequest;
