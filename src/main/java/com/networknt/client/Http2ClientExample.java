@@ -20,7 +20,7 @@ import com.networknt.client.oauth.TokenResponse;
 import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;
 import com.networknt.service.SingletonServiceFactory;
-import com.networknt.status.exception.ClientException;
+import com.networknt.exception.ClientException;
 import io.undertow.UndertowOptions;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientRequest;

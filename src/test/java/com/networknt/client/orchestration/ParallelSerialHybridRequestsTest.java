@@ -39,8 +39,6 @@ public class ParallelSerialHybridRequestsTest {
 
     }
 
-    // TODO resolve this as ClosedChannelException is thrown in jdk11.
-    @Ignore
     @Test
     public void testAsync() {
         CompletableFuture<List<Pet>> petListFutureResponse = petListRequest.callForTypedList(Pet.class);

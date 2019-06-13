@@ -17,7 +17,7 @@
 package com.networknt.client.rest;
 
 
-import com.networknt.status.exception.ClientException;
+import com.networknt.exception.ClientException;
 
 public class RestClientException extends ClientException {
 

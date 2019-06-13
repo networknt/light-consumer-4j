@@ -23,8 +23,8 @@ import com.networknt.client.model.TimeoutDef;
 import com.networknt.cluster.Cluster;
 import com.networknt.config.Config;
 import com.networknt.service.SingletonServiceFactory;
-import com.networknt.status.exception.ApiException;
-import com.networknt.status.exception.ClientException;
+import com.networknt.exception.ApiException;
+import com.networknt.exception.ClientException;
 import io.undertow.client.ClientCallback;
 import io.undertow.client.ClientConnection;
 import io.undertow.client.ClientExchange;
@@ -45,6 +45,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * HTTP Client Builder
+ *
+ */
 public class HttpClientBuilder {
 
     private static Logger logger = LoggerFactory.getLogger(HttpClientBuilder.class);
