@@ -1,5 +1,15 @@
 # Change Log
 
+## [2.0.1](https://github.com/networknt/light-consumer-4j/tree/2.0.1) (2019-06-13)
+
+
+**Merged pull requests:**
+
+
+- fixes \#35 add both release and snapshot repositories [\#36](https://github.com/networknt/light-consumer-4j/pull/36) ([stevehu](https://github.com/stevehu))
+- fix issue \#33. Add new method for LightRestClient [\#34](https://github.com/networknt/light-consumer-4j/pull/34) ([chenyan71](https://github.com/chenyan71))
+- PR for  issue \#30 [\#31](https://github.com/networknt/light-consumer-4j/pull/31) ([chenyan71](https://github.com/chenyan71))
+- fixes \#26 disable test cases in TestHttpClientBuilder [\#28](https://github.com/networknt/light-consumer-4j/pull/28) ([stevehu](https://github.com/stevehu))
 ## [1.6.4](https://github.com/networknt/light-consumer-4j/tree/1.6.4) (2019-06-10)
 
 
