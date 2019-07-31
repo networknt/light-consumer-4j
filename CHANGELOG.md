@@ -6,6 +6,9 @@
 **Merged pull requests:**
 
 
+- fixes \#39 [\#40](https://github.com/networknt/light-consumer-4j/pull/40) ([chenyan71](https://github.com/chenyan71))
+
+
 ## [1.6.5](https://github.com/networknt/light-consumer-4j/tree/1.6.5) (2019-07-12)
 
 
