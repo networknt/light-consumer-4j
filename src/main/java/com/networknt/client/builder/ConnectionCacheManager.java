@@ -24,8 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.xnio.OptionMap;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +35,7 @@ public class ConnectionCacheManager {
     private static Logger logger = LoggerFactory.getLogger(ConnectionCacheManager.class);
     private static ExecutorService executorService = Executors.newFixedThreadPool(2);
     private static Map<String, CacheableConnection> clientConnectionMap = new HashMap<>();
+    private static Map<String, List<CacheableConnection>> clientConnectionParkedMap = new HashMap<>();
 
     private static OptionMap http2OptionMap = OptionMap.create(UndertowOptions.ENABLE_HTTP2, true);
     private static OptionMap http1OptionMap = OptionMap.EMPTY;
@@ -61,11 +61,41 @@ public class ConnectionCacheManager {
                 logger.debug("Reusing open connection to: " + hostUri);
                 return connection.getCachedConnection();
             }
+            handleParkedConnection(hostUri.toString(), connection);
             logger.debug("Creating a new connection to: " + hostUri);
             CacheableConnection cacheableConnection = new CacheableConnection(this.connect(hostUri, connectionRequestTimeout, isHttp2Enabled), connectionTTL,requestCount);
 
             clientConnectionMap.put(hostUri.toString(), cacheableConnection);
             return cacheableConnection.getCachedConnection();
+        }
+    }
+
+    private void handleParkedConnection(String host, CacheableConnection connection) {
+        if(connection == null) {
+            return;
+        }
+        List<CacheableConnection> parkedConList = clientConnectionParkedMap.get(host);
+        if(parkedConList == null) {
+            parkedConList = new ArrayList<CacheableConnection>();
+            clientConnectionParkedMap.put(host, parkedConList);
+        }
+        logger.info("Total parked connection for the host {} is {}", host, parkedConList.size());
+        Iterator<CacheableConnection> iter = parkedConList.iterator();
+        while(iter.hasNext()) {
+            // the isParkedConnectionExpired will close the connection.
+            if(iter.next().isParkedConnectionExpired()) {
+                iter.remove();
+                logger.info("Removing the expired Parked Connection for the host {}", host);
+            }
+        }
+        try {
+            if(connection.getCachedConnection().isOpen()) {
+                parkedConList.add(connection);
+                logger.info("Parked the coonection for the host {}, total parked count is {}", host, parkedConList.size());
+            }
+        } catch(Exception ignored) {
+            //ignore any exceptions in this catch. Exception logged on info level.
+            logger.info("Exception while handling the parked connection. Exception is :", ignored);
         }
     }
 
