@@ -32,14 +32,14 @@ public class ConnectionCacheManagerTest {
      */
     //@Test
     public void testCacheableConnection() throws Exception {
-        ClientConnection connection0 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000);
-        ClientConnection connection1 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000);
+        ClientConnection connection0 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000,60000);
+        ClientConnection connection1 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000,60000);
         Assert.assertTrue(connection0 == connection1); // Both connections should be the same instance.
         Thread.sleep(3000);
-        ClientConnection connection2 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000);
+        ClientConnection connection2 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000,60000);
         Assert.assertFalse(connection1 == connection2); // The connection 1 is expired and moved to the parked map. connection2 is another instance.
         Thread.sleep(3000);
-        ClientConnection connection3 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000);
+        ClientConnection connection3 = manager.getConnection(uri, 2000, new TimeoutDef(2, TimeUnit.SECONDS), true, 1000,60000);
         Assert.assertFalse(connection1.isOpen()); // at this moment, the connection1 is closed if parked ttl is set to 100 milliseconds for debugging.
         Assert.assertTrue(connection2.isOpen());
         Assert.assertTrue(connection3.isOpen());
