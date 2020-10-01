@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.18](https://github.com/networknt/light-consumer-4j/tree/2.0.18) (2020-10-01)
+
+
+**Merged pull requests:**
+
+
+- fixes \#48 - Added support to read parked connection TTL from Client yaml [\#49](https://github.com/networknt/light-consumer-4j/pull/49) ([SureshTak](https://github.com/SureshTak))
 ## [2.0.17](https://github.com/networknt/light-consumer-4j/tree/2.0.17) (2020-08-28)
 
 
