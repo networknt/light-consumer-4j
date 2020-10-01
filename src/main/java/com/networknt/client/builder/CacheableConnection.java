@@ -57,7 +57,7 @@ public class CacheableConnection {
      */
     public CacheableConnection(ClientConnection clientConnection, long ttl, int maxReqCount, long ttlParked) {
         this(clientConnection, ttl, maxReqCount);
-        this.ttlParked = ttlParked;
+        if(ttlParked > 0) this.ttlParked = ttlParked;  //ttlParked is 0 set default value 1 min
     }
 
     public boolean isOpen() {

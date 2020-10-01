@@ -98,7 +98,7 @@ public class HttpClientBuilder {
 
         ClientConnection clientConnection = connectionCacheManager.getConnection(requestHost,
                 httpClientRequest.getConnectionCacheTTLms(), httpClientRequest.getConnectionRequestTimeout(),
-                httpClientRequest.getHttp2Enabled(),httpClientRequest.getMaxReqCount());
+                httpClientRequest.getHttp2Enabled(),httpClientRequest.getMaxReqCount(),httpClientRequest.getParkedConnectionTTL());
 
         // Send the request
         clientConnection.sendRequest(httpClientRequest.getClientRequest(), this.getClientCallback(httpClientRequest.getResponseReference()));
@@ -232,6 +232,10 @@ public class HttpClientBuilder {
     }
     public HttpClientBuilder setMaxReqCount(int maxReqCount) {
         this.httpClientRequest.setMaxReqCount(maxReqCount);
+        return this;
+    }
+    public HttpClientBuilder setParkedConnectionTTL(long ttlParked) {
+        this.httpClientRequest.setParkedConnectionTTL(ttlParked);
         return this;
     }
 }

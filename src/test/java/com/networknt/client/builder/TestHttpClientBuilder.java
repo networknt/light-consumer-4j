@@ -64,7 +64,7 @@ public class TestHttpClientBuilder {
         PowerMockito.when(httpClientRequest.getMaxReqCount()).thenReturn(-1);
         when(httpClientRequest.getApiHost()).thenReturn("https://localhost:8080");
         uri = new URI("https://localhost:8080");
-        when(connectionCacheManager.getConnection(uri, 10000, null, true, -1)).thenReturn(clientConnection);
+        when(connectionCacheManager.getConnection(uri, 10000, null, true, -1,60000)).thenReturn(clientConnection);
     }
 
     //@Test
