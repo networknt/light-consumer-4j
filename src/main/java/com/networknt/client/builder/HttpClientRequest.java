@@ -43,6 +43,7 @@ public class HttpClientRequest implements AutoCloseable {
     private String apiHost;
 
     private int maxReqCount=-1;
+    private long parkedConnectionTTL;
 
 
     // Cached thread pool as we might expect many short-lived threads..
@@ -187,5 +188,13 @@ public class HttpClientRequest implements AutoCloseable {
 
     public void setMaxReqCount(int maxReqCount) {
         this.maxReqCount = maxReqCount;
+    }
+
+    public long getParkedConnectionTTL() {
+        return parkedConnectionTTL;
+    }
+
+    public void setParkedConnectionTTL(long parkedConnectionTTL) {
+        this.parkedConnectionTTL = parkedConnectionTTL;
     }
 }
