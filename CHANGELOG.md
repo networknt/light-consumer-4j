@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.19](https://github.com/networknt/light-consumer-4j/tree/2.0.19) (2020-11-01)
+
+
+**Merged pull requests:**
+
+
+- Bump junit from 4.12 to 4.13.1 [\#50](https://github.com/networknt/light-consumer-4j/pull/50) ([dependabot](https://github.com/apps/dependabot))
 ## [2.0.18](https://github.com/networknt/light-consumer-4j/tree/2.0.18) (2020-10-01)
 
 
