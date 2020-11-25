@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.21](https://github.com/networknt/light-consumer-4j/tree/2.0.21) (2020-11-25)
+
+
+**Merged pull requests:**
+
+
+- fixes \#51 update client.yml and server.yml for passwords [\#52](https://github.com/networknt/light-consumer-4j/pull/52) ([stevehu](https://github.com/stevehu))
 ## [2.0.20](https://github.com/networknt/light-consumer-4j/tree/2.0.20) (2020-11-05)
 
 
