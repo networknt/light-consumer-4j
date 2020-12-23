@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.networknt</groupId>
     <artifactId>light-consumer-4j</artifactId>
-    <version>1.6.30-SNAPSHOT</version>
+    <version>1.6.30</version>
     <packaging>jar</packaging>
     <name>Parent POM</name>
     <description>Light 4J Client Dependency Module</description>
