@@ -1,7 +1,6 @@
 package com.networknt.client.builder;
 
 import com.networknt.client.model.TimeoutDef;
-import com.networknt.client.orchestration.RequestStressTest;
 import com.networknt.petstore.handler.TestServer;
 import io.undertow.client.ClientConnection;
 import org.junit.Assert;
@@ -17,7 +16,7 @@ public class ConnectionCacheManagerTest {
     @ClassRule
     public static TestServer server = TestServer.getInstance();
 
-    static final Logger logger = LoggerFactory.getLogger(RequestStressTest.class);
+    static final Logger logger = LoggerFactory.getLogger(ConnectionCacheManagerTest.class);
     static final boolean enableHttp2 = server.getServerConfig().isEnableHttp2();
     static final boolean enableHttps = server.getServerConfig().isEnableHttps();
     static final int httpPort = server.getServerConfig().getHttpPort();
