@@ -1,11 +1,14 @@
-package com.networknt.client.orchestration;
+package com.networknt.client.http;
 
 
 import com.networknt.client.model.HttpVerb;
 import com.networknt.petstore.handler.TestServer;
 import com.networknt.petstore.model.Pet;
 import com.networknt.petstore.model.Tag;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
