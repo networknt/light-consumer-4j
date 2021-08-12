@@ -2,12 +2,14 @@ package com.networknt.client.http;
 
 import com.networknt.client.Http2Client;
 import com.networknt.client.model.HttpVerb;
+import com.networknt.status.HttpStatus;
 import io.undertow.client.ClientResponse;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -226,9 +228,12 @@ public class Http2ServiceRequestTest {
             fail();
         }
 
-        Predicate<Integer> statusValidator = mock(Predicate.class);
-        this.underTest.setIsStatusCodeValid(statusValidator);
-        doReturn(false).when(statusValidator).test(anyInt());
+        List<HttpStatus> statusCodesValid = new ArrayList<>();
+
+        statusCodesValid.add(HttpStatus.OK);
+        statusCodesValid.add(HttpStatus.CREATED);
+        this.underTest.setStatusCodesValid(statusCodesValid);
+        doReturn(false).when(statusCodesValid).contains(anyInt());
         try {
             this.underTest.optionallyValidateClientResponseStatusCode(200);
             fail();
@@ -236,7 +241,7 @@ public class Http2ServiceRequestTest {
 
         }
 
-        doReturn(true).when(statusValidator).test(anyInt());
+        doReturn(true).when(statusCodesValid).contains(anyInt());
         try {
             this.underTest.optionallyValidateClientResponseStatusCode(200);
         } catch (Exception e) {
