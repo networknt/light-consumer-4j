@@ -1,5 +1,13 @@
 # Change Log
 
+## [2.0.30](https://github.com/networknt/light-consumer-4j/tree/2.0.30) (2021-08-23)
+
+
+**Merged pull requests:**
+
+
+- change to cordinate the client module change in light-4j [\#55](https://github.com/networknt/light-consumer-4j/pull/55) ([GavinChenYan](https://github.com/GavinChenYan))
+- change with the issue in light-4j \#1015 [\#54](https://github.com/networknt/light-consumer-4j/pull/54) ([GavinChenYan](https://github.com/GavinChenYan))
 ## [2.0.29](https://github.com/networknt/light-consumer-4j/tree/2.0.29) (2021-07-25)
 
 
