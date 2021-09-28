@@ -6,7 +6,7 @@ singletons:
       port: 8080
       path: direct
       parameters:
-        com.cibc.hello-3.0.1: https://localhost:8444
+        com.networknt.hello-3.0.1: https://localhost:8444
 - com.networknt.registry.Registry:
   - com.networknt.registry.support.DirectRegistry
 - com.networknt.balance.LoadBalance:
