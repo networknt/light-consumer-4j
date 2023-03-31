@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.1.9](https://github.com/networknt/light-consumer-4j/tree/2.1.9) (2023-03-30)
+
+
+**Merged pull requests:**
+
+
+- fixes \#58 update the metrics handler to influxMetricsHandler [\#59](https://github.com/networknt/light-consumer-4j/pull/59) ([stevehu](https://github.com/stevehu))
 ## [2.1.8](https://github.com/networknt/light-consumer-4j/tree/2.1.8) (2023-03-06)
 
 
