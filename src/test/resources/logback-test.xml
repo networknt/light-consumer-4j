@@ -26,12 +26,24 @@
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{sId} %X{cId} %X{appNumber} %-5level %logger{36} %M - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5marker %-5level %class{36}:%L %M - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="debug">
+    <appender name="log" class="ch.qos.logback.core.FileAppender">
+        <File>target/test.log</File>
+        <Append>false</Append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %class{36}:%L %M - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="error">
         <appender-ref ref="stdout"/>
     </root>
+
+    <logger name="com.networknt" level="trace" additivity="false">
+        <appender-ref ref="stdout"/>
+    </logger>
 
 </configuration>
