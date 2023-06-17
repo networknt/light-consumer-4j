@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.1.20](https://github.com/networknt/light-consumer-4j/tree/2.1.20) (2023-06-17)
+
+
+**Merged pull requests:**
+
+
+- fixes \#60 rename logback.xml to logback-test.xml in test folder [\#61](https://github.com/networknt/light-consumer-4j/pull/61) ([stevehu](https://github.com/stevehu))
 ## [2.1.19](https://github.com/networknt/light-consumer-4j/tree/2.1.19) (2023-06-05)
 
 
