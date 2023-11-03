@@ -97,7 +97,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <versions.maven-version>2.4</versions.maven-version>
         <version.logback>1.2.11</version.logback>
-        <version.jackson>2.14.0</version.jackson>
+        <version.jackson>2.15.3</version.jackson>
         <version.slf4j>1.7.36</version.slf4j>
         <version.jose4j>0.6.3</version.jose4j>
         <version.junit>4.12</version.junit>
